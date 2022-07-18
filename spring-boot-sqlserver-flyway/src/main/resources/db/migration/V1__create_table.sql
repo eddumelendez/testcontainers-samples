@@ -1,0 +1,1 @@
+CREATE TABLE profile(id int primary key identity (1,1), name varchar(255) not null);
