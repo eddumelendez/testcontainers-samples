@@ -1,0 +1,4 @@
+steps:
+  - name: eclipse-temurin:17.0.3_7-jdk-alpine
+    entrypoint: ./mvnw
+    args: ['test']
