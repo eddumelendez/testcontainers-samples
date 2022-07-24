@@ -1,0 +1,13 @@
+image: eclipse-temurin:17.0.3_7-jdk-alpine
+pipelines:
+  default:
+    - step:
+        services:
+          - docker
+        script:
+          - export TESTCONTAINERS_RYUK_DISABLED=true
+          - ./mvnw test
+definitions:
+  services:
+    docker:
+      memory: 2048
