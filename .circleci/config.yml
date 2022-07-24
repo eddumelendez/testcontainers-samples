@@ -1,0 +1,14 @@
+version: 2.1
+
+jobs:
+  test:
+    machine:
+      enabled: true
+    steps:
+      - checkout
+      - run: ./mvnw test
+
+workflows:
+  sample:
+    jobs:
+      - test
