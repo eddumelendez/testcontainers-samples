@@ -14,6 +14,7 @@
         <module>spring-boot-mongodb-liquibase</module>
         <module>spring-boot-sqlserver-flyway</module>
         <module>spring-boot-postgresql-flyway</module>
+        <module>spring-boot-prometheus</module>
     </modules>
 
 </project>
