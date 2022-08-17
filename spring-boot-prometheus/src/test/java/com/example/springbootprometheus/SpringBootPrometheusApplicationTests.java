@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy;
+import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.images.builder.Transferable;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -33,7 +33,7 @@ class SpringBootPrometheusApplicationTests {
     @Container
     static final GenericContainer<?> prometheus = new GenericContainer<>("prom/prometheus:v2.37.0")
             .withExposedPorts(9090)
-            .waitingFor(new LogMessageWaitStrategy().withRegEx("(?s).*Server is ready to receive web requests.*$"))
+            .waitingFor(Wait.forLogMessage("(?s).*Server is ready to receive web requests.*$", 1))
             .withAccessToHost(true);
 
     @BeforeEach
