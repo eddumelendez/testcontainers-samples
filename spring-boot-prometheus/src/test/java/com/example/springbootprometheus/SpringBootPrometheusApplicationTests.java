@@ -1,6 +1,5 @@
 package com.example.springbootprometheus;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.actuate.metrics.AutoConfigureMetrics;
@@ -8,8 +7,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy;
+import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.images.builder.Transferable;
+import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.shaded.org.awaitility.Awaitility;
 
@@ -30,22 +30,30 @@ class SpringBootPrometheusApplicationTests {
     @LocalServerPort
     private int localPort;
 
-    private static GenericContainer prometheus;
+    @Container
+    static final GenericContainer<?> prometheus = new GenericContainer<>("prom/prometheus:v2.37.0")
+            .withExposedPorts(9090)
+            .waitingFor(Wait.forLogMessage("(?s).*Server is ready to receive web requests.*$", 1))
+            .withAccessToHost(true);
 
     @BeforeEach
     void setUp() {
         org.testcontainers.Testcontainers.exposeHostPorts(this.localPort);
-        if (prometheus == null) {
-            prometheus = createPrometheus();
-            prometheus.start();
-        }
-    }
 
-    @AfterAll
-    static void tearDown() {
-        if (prometheus != null) {
-            prometheus.stop();
-        }
+        var config = """
+                scrape_configs:
+                  - job_name: "prometheus"
+                    scrape_interval: 2s
+                    metrics_path: "/actuator/prometheus"
+                    static_configs:
+                      - targets: ['host.testcontainers.internal:%s']
+                """.formatted(this.localPort);
+        prometheus.copyFileToContainer(Transferable.of(config), "/etc/prometheus/prometheus.yml");
+
+        // Reload config
+        prometheus.getDockerClient().killContainerCmd(prometheus.getContainerId())
+                .withSignal("SIGHUP")
+                .exec();
     }
 
     @Test
@@ -69,21 +77,4 @@ class SpringBootPrometheusApplicationTests {
                                 .statusCode(200)
                                 .body("data.result[0].value", hasItem("1")));
     }
-
-    private GenericContainer createPrometheus() {
-        var config = """
-                scrape_configs:
-                  - job_name: "prometheus"
-                    scrape_interval: 2s
-                    metrics_path: "/actuator/prometheus"
-                    static_configs:
-                      - targets: ['host.testcontainers.internal:%s']
-                """.formatted(this.localPort);
-        return new GenericContainer<>("prom/prometheus:v2.37.0")
-                .withExposedPorts(9090)
-                .withCopyToContainer(Transferable.of(config), "/etc/prometheus/prometheus.yml")
-                .waitingFor(new LogMessageWaitStrategy().withRegEx("(?s).*Server is ready to receive web requests.*$"))
-                .withAccessToHost(true);
-    }
-
 }
