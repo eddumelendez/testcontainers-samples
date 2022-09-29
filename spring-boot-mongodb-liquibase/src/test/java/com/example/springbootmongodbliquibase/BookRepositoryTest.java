@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class BookRepositoryTest {
 
     @Container
-    private static final MongoDBContainer mongo = new MongoDBContainer("mongo:4.0.10");
+    private static final MongoDBContainer mongo = new MongoDBContainer("mongo:6");
 
     @Autowired
     private PersonRepository repository;
