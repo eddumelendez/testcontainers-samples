@@ -16,6 +16,7 @@
         <module>spring-boot-postgresql-flyway</module>
         <module>spring-boot-prometheus</module>
         <module>spring-boot-tidb-liquibase</module>
+        <module>spring-cloud-consul</module>
     </modules>
 
 </project>
