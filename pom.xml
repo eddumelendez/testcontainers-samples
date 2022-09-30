@@ -17,6 +17,7 @@
         <module>spring-boot-prometheus</module>
         <module>spring-boot-tidb-liquibase</module>
         <module>spring-cloud-consul</module>
+        <module>spring-cloud-vault</module>
     </modules>
 
 </project>
