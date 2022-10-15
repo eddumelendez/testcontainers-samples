@@ -20,7 +20,7 @@ class SpringCloudVaultApplicationTests {
     private int port;
 
     @Container
-    private static VaultContainer vault = new VaultContainer("vault:1.11.3")
+    private static VaultContainer vault = new VaultContainer("vault:1.12.0")
             .withVaultToken("tc-token")
             .withInitCommand("kv put secret/tc message=\"spring loves tc\"");
 
