@@ -10,16 +10,17 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Testcontainers
-@DataJdbcTest(properties = {"spring.datasource.url=jdbc:tc:tidb:v6.2.0:///"})
+@DataJdbcTest(properties = { "spring.datasource.url=jdbc:tc:tidb:v6.2.0:///" })
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class TiDBHostLessTest {
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
 
-    @Test
-    void test() {
-        var records = this.jdbcTemplate.queryForList("select count(*) from profile");
-        assertThat(records).hasSize(1);
-    }
+	@Test
+	void test() {
+		var records = this.jdbcTemplate.queryForList("select count(*) from profile");
+		assertThat(records).hasSize(1);
+	}
+
 }

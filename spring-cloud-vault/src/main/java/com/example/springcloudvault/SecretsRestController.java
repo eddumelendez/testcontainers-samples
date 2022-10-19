@@ -8,15 +8,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class SecretsRestController {
 
-    private Environment environment;
+	private Environment environment;
 
-    public SecretsRestController(Environment environment) {
-        this.environment = environment;
-    }
+	public SecretsRestController(Environment environment) {
+		this.environment = environment;
+	}
 
-    @GetMapping("/secrets/{secret-name}")
-    public String reveal(@PathVariable("secret-name") String secretName) {
-        return this.environment.getProperty(secretName);
-    }
+	@GetMapping("/secrets/{secret-name}")
+	public String reveal(@PathVariable("secret-name") String secretName) {
+		return this.environment.getProperty(secretName);
+	}
 
 }

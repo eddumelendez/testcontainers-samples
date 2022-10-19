@@ -20,25 +20,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Testcontainers
 class BookRepositoryTest {
 
-    @Container
-    private static final MongoDBContainer mongo = new MongoDBContainer("mongo:6");
+	@Container
+	private static final MongoDBContainer mongo = new MongoDBContainer("mongo:6");
 
-    @Autowired
-    private PersonRepository repository;
+	@Autowired
+	private PersonRepository repository;
 
-    @DynamicPropertySource
-    static void mongoProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.data.mongodb.uri", mongo::getConnectionString);
-    }
+	@DynamicPropertySource
+	static void mongoProperties(DynamicPropertyRegistry registry) {
+		registry.add("spring.data.mongodb.uri", mongo::getConnectionString);
+	}
 
-    @Test
-    void test() throws LiquibaseException {
-        var database = (MongoLiquibaseDatabase) DatabaseFactory.getInstance().openDatabase(mongo.getReplicaSetUrl("test"), null, null, null, null);
-        var liquibase = new Liquibase("db/changelog/db.changelog-master.json", new ClassLoaderResourceAccessor(), database);
-        liquibase.update("");
+	@Test
+	void test() throws LiquibaseException {
+		var database = (MongoLiquibaseDatabase) DatabaseFactory.getInstance()
+				.openDatabase(mongo.getReplicaSetUrl("test"), null, null, null, null);
+		var liquibase = new Liquibase("db/changelog/db.changelog-master.json", new ClassLoaderResourceAccessor(),
+				database);
+		liquibase.update("");
 
-        var books = this.repository.findAll();
-        assertThat(books).hasSize(3);
-    }
+		var books = this.repository.findAll();
+		assertThat(books).hasSize(3);
+	}
 
 }

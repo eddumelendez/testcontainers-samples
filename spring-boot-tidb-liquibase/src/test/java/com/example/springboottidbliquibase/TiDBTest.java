@@ -18,23 +18,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class TiDBTest {
 
-    @Container
-    private static final TiDBContainer postgres = new TiDBContainer("pingcap/tidb:v6.1.0");
+	@Container
+	private static final TiDBContainer postgres = new TiDBContainer("pingcap/tidb:v6.1.0");
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
 
-    @DynamicPropertySource
-    static void sqlserverProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgres::getJdbcUrl);
-        registry.add("spring.datasource.username", postgres::getUsername);
-        registry.add("spring.datasource.password", postgres::getPassword);
-    }
+	@DynamicPropertySource
+	static void sqlserverProperties(DynamicPropertyRegistry registry) {
+		registry.add("spring.datasource.url", postgres::getJdbcUrl);
+		registry.add("spring.datasource.username", postgres::getUsername);
+		registry.add("spring.datasource.password", postgres::getPassword);
+	}
 
-    @Test
-    void test() {
-        var records = this.jdbcTemplate.queryForList("select count(*) from profile");
-        assertThat(records).hasSize(1);
-    }
+	@Test
+	void test() {
+		var records = this.jdbcTemplate.queryForList("select count(*) from profile");
+		assertThat(records).hasSize(1);
+	}
 
 }

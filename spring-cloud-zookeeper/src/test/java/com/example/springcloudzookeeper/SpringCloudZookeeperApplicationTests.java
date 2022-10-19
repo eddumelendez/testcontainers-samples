@@ -17,30 +17,32 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Testcontainers
 class SpringCloudZookeeperApplicationTests {
 
-    private static final int ZOOKEEPER_PORT = 2181;
+	private static final int ZOOKEEPER_PORT = 2181;
 
-    @Container
-    private static final GenericContainer<?> zookeeper = new GenericContainer<>("zookeeper:3.8.0")
-            .withExposedPorts(ZOOKEEPER_PORT);
+	@Container
+	private static final GenericContainer<?> zookeeper = new GenericContainer<>("zookeeper:3.8.0")
+			.withExposedPorts(ZOOKEEPER_PORT);
 
-    @Autowired
-    private Environment environment;
+	@Autowired
+	private Environment environment;
 
-    @BeforeAll
-    static void beforeAll() throws Exception {
-        var zkConnectionString = "%s:%d".formatted(zookeeper.getHost(), zookeeper.getMappedPort(ZOOKEEPER_PORT));
-        System.setProperty("spring.config.import", "zookeeper:%s/messages".formatted(zkConnectionString));
+	@BeforeAll
+	static void beforeAll() throws Exception {
+		var zkConnectionString = "%s:%d".formatted(zookeeper.getHost(), zookeeper.getMappedPort(ZOOKEEPER_PORT));
+		System.setProperty("spring.config.import", "zookeeper:%s/messages".formatted(zkConnectionString));
 
-        var curatorFramework = CuratorFrameworkFactory.builder().connectString(zkConnectionString).retryPolicy(new RetryOneTime(100)).build();
-        curatorFramework.start();
-        curatorFramework.create().creatingParentsIfNeeded().forPath("/messages/zk-tc", "Running Zookeeper with Testcontainers".getBytes());
-        curatorFramework.close();
-    }
+		var curatorFramework = CuratorFrameworkFactory.builder().connectString(zkConnectionString)
+				.retryPolicy(new RetryOneTime(100)).build();
+		curatorFramework.start();
+		curatorFramework.create().creatingParentsIfNeeded().forPath("/messages/zk-tc",
+				"Running Zookeeper with Testcontainers".getBytes());
+		curatorFramework.close();
+	}
 
-    @Test
-    void contextLoads() {
-        assertThat(this.environment.containsProperty("zk-tc")).isTrue();
-        assertThat(this.environment.getProperty("zk-tc")).isEqualTo("Running Zookeeper with Testcontainers");
-    }
+	@Test
+	void contextLoads() {
+		assertThat(this.environment.containsProperty("zk-tc")).isTrue();
+		assertThat(this.environment.getProperty("zk-tc")).isEqualTo("Running Zookeeper with Testcontainers");
+	}
 
 }

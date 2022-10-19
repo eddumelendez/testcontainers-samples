@@ -10,18 +10,18 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Testcontainers
-@DataJdbcTest(properties = {"spring.datasource.url=jdbc:tc:sqlserver:latest:///"})
+@DataJdbcTest(properties = { "spring.datasource.url=jdbc:tc:sqlserver:latest:///" })
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class HostLessTest {
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
 
-    @Test
-    void contextLoads() {
-        this.jdbcTemplate.update("insert into profile (name) values ('profile-1')");
-        var records = this.jdbcTemplate.queryForList("select * from profile");
-        assertThat(records).hasSize(1);
-    }
+	@Test
+	void contextLoads() {
+		this.jdbcTemplate.update("insert into profile (name) values ('profile-1')");
+		var records = this.jdbcTemplate.queryForList("select * from profile");
+		assertThat(records).hasSize(1);
+	}
 
 }
