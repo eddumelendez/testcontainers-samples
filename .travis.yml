@@ -1,0 +1,8 @@
+language: java
+jdk:
+  - openjdk17
+
+services:
+  - docker
+
+script: ./mvnw verify
