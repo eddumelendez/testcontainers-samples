@@ -19,6 +19,7 @@
         <module>spring-cloud-consul</module>
         <module>spring-cloud-vault</module>
         <module>spring-cloud-zookeeper</module>
+        <module>spring-cloud-azure-storage</module>
     </modules>
 
     <build>
