@@ -20,6 +20,7 @@
         <module>spring-cloud-vault</module>
         <module>spring-cloud-zookeeper</module>
         <module>spring-cloud-azure-storage</module>
+        <module>spring-boot-r2dbc-postgresql-chaos</module>
     </modules>
 
     <build>
@@ -38,6 +39,14 @@
                     </execution>
                 </executions>
             </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-surefire-plugin</artifactId>-->
+<!--                <configuration>-->
+<!--                    <parallel>classes</parallel>-->
+<!--                    <forkCount>4</forkCount>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
         </plugins>
     </build>
 
