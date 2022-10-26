@@ -32,7 +32,7 @@ class SpringBootR2dbcPostgresqlChaosApplicationTests {
 
 	@Container
 	private static final ToxiproxyContainer toxiproxy = new ToxiproxyContainer("ghcr.io/shopify/toxiproxy:2.5.0")
-			.withExposedPorts(8474, 8666).withNetwork(network);
+			.withNetwork(network);
 
 	private static Proxy postgresqlProxy;
 
@@ -40,8 +40,7 @@ class SpringBootR2dbcPostgresqlChaosApplicationTests {
 	static void sqlserverProperties(DynamicPropertyRegistry registry) throws IOException {
 		var toxiproxyClient = new ToxiproxyClient(toxiproxy.getHost(), toxiproxy.getControlPort());
 		var postgresAlias = postgres.getNetworkAliases().get(0);
-		postgresqlProxy = toxiproxyClient.createProxy("postgresql", "0.0.0.0:%d".formatted(8666),
-				"%s:5432".formatted(postgresAlias));
+		postgresqlProxy = toxiproxyClient.createProxy("postgresql", "0.0.0.0:8666", "%s:5432".formatted(postgresAlias));
 
 		registry.add("spring.r2dbc.url", () -> "r2dbc:postgresql://%s:%d/%s".formatted(toxiproxy.getHost(),
 				toxiproxy.getMappedPort(8666), postgres.getDatabaseName()));
