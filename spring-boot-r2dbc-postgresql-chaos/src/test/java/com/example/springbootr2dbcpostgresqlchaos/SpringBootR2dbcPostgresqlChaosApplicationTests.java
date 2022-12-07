@@ -80,7 +80,7 @@ class SpringBootR2dbcPostgresqlChaosApplicationTests {
 		postgresqlProxy.disable();
 
 		StepVerifier.create(this.profileRepository.findAll())
-				.expectErrorMatches(throwable -> throwable.getMessage().contains("Connection unexpectedly closed"))
+				.expectErrorMatches(throwable -> throwable.getMessage().contains("Failed to obtain R2DBC Connection"))
 				.verify();
 	}
 

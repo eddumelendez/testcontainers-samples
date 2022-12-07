@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.7.4</version>
+		<version>3.0.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
@@ -16,7 +16,7 @@
 	<properties>
 		<java.version>17</java.version>
 		<testcontainers.version>1.17.6</testcontainers.version>
-		<liquibase-mongodb.version>4.13.0</liquibase-mongodb.version>
+		<liquibase-mongodb.version>4.18.0</liquibase-mongodb.version>
 	</properties>
 	<dependencies>
 		<dependency>

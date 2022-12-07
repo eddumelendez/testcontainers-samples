@@ -3,6 +3,7 @@ package com.example.springbootprometheus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.actuate.metrics.AutoConfigureMetrics;
+import org.springframework.boot.test.autoconfigure.actuate.observability.AutoConfigureObservability;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -22,7 +23,7 @@ import static org.hamcrest.Matchers.hasItem;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT,
 		properties = { "management.endpoints.web.exposure.include=*", "management.metrics.export.prometheus.step=2s" })
-@AutoConfigureMetrics
+@AutoConfigureObservability(tracing = false)
 @Testcontainers
 class SpringBootPrometheusApplicationTests {
 
