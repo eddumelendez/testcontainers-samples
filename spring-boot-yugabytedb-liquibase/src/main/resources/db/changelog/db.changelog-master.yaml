@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - changeSet:
+      id: DEMO001
+      author: eddumelendez
+      changes:
+        - sqlFile:
+            path: db/changelog/V1__create_populate_table.sql
