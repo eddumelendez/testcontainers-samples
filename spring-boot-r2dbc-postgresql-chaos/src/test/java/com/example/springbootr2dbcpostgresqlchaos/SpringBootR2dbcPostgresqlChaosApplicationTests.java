@@ -5,9 +5,7 @@ import eu.rekawek.toxiproxy.ToxiproxyClient;
 import eu.rekawek.toxiproxy.model.ToxicDirection;
 import eu.rekawek.toxiproxy.model.toxic.Latency;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +28,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Testcontainers
 @DataR2dbcTest
-@TestMethodOrder(MethodOrderer.MethodName.class)
 class SpringBootR2dbcPostgresqlChaosApplicationTests {
 
 	private static final Logger logger = LoggerFactory.getLogger(SpringBootR2dbcPostgresqlChaosApplicationTests.class);
