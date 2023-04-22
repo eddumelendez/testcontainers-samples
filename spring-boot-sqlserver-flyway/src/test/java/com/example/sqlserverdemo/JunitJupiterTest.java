@@ -3,7 +3,7 @@ package com.example.sqlserverdemo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcServiceConnection;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.testcontainers.containers.MSSQLServerContainer;
@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class JunitJupiterTest {
 
 	@Container
-	@JdbcServiceConnection
+	@ServiceConnection
 	private static MSSQLServerContainer sqlserver = new MSSQLServerContainer("mcr.microsoft.com/mssql/server:2017-CU12")
 			.acceptLicense();
 
