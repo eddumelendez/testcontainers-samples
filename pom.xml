@@ -19,6 +19,7 @@
         <module>spring-boot-postgresql-flyway</module>
         <module>spring-boot-postgresql-synthesized</module>
         <module>spring-boot-prometheus</module>
+        <module>spring-boot-pulsar</module>
         <module>spring-boot-tidb-flyway</module>
         <module>spring-boot-tidb-liquibase</module>
         <module>spring-boot-yugabytedb-flyway</module>
