@@ -11,6 +11,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>spring-boot-activemq</module>
         <module>spring-boot-cockroachdb-flyway</module>
         <module>spring-boot-cockroachdb-liquibase</module>
         <module>spring-boot-jpa</module>
