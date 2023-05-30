@@ -15,7 +15,7 @@
     <description>spring-boot-tidb-flyway</description>
     <properties>
         <java.version>17</java.version>
-        <testcontainers.version>1.18.1</testcontainers.version>
+        <testcontainers.version>1.18.2</testcontainers.version>
     </properties>
     <dependencies>
         <dependency>
