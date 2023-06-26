@@ -26,11 +26,11 @@ class PostgresTest {
 
 	@Container
 	private static final PostgreSQLContainer<?> postgresIn = new PostgreSQLContainer<>("postgres:15-alpine")
-			.withNetwork(network);
+		.withNetwork(network);
 
 	@Container
 	private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15-alpine")
-			.withNetwork(network);
+		.withNetwork(network);
 
 	private static final String synthesizedConfig = """
 			default_config:

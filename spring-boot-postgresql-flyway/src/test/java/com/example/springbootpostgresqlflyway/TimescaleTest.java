@@ -19,7 +19,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 class TimescaleTest {
 
 	private static final DockerImageName dockerImageName = DockerImageName.parse("timescale/timescaledb")
-			.withTag("2.7.2-pg14").asCompatibleSubstituteFor("postgres");
+		.withTag("2.7.2-pg14")
+		.asCompatibleSubstituteFor("postgres");
 
 	@Container
 	@ServiceConnection

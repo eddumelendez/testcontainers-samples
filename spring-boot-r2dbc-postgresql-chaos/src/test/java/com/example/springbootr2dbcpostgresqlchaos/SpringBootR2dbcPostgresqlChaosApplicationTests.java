@@ -36,11 +36,12 @@ class SpringBootR2dbcPostgresqlChaosApplicationTests {
 
 	@Container
 	private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15-alpine")
-			.withNetwork(network).withNetworkAliases("postgres");
+		.withNetwork(network)
+		.withNetworkAliases("postgres");
 
 	@Container
 	private static final ToxiproxyContainer toxiproxy = new ToxiproxyContainer("ghcr.io/shopify/toxiproxy:2.5.0")
-			.withNetwork(network);
+		.withNetwork(network);
 
 	private static Proxy postgresqlProxy;
 
@@ -89,27 +90,35 @@ class SpringBootR2dbcPostgresqlChaosApplicationTests {
 	void withLatencyWithTimeout() throws IOException {
 		postgresqlProxy.toxics().latency("postgresql-latency", ToxicDirection.DOWNSTREAM, 1600).setJitter(100);
 		StepVerifier.create(this.profileRepository.findAll().timeout(Duration.ofMillis(50)))
-				.expectError(TimeoutException.class).verify();
+			.expectError(TimeoutException.class)
+			.verify();
 	}
 
 	@Test
 	void withLatencyWithRetries() throws IOException {
-		Latency latency = postgresqlProxy.toxics().latency("postgresql-latency", ToxicDirection.DOWNSTREAM, 1600)
-				.setJitter(100);
+		Latency latency = postgresqlProxy.toxics()
+			.latency("postgresql-latency", ToxicDirection.DOWNSTREAM, 1600)
+			.setJitter(100);
 
 		StepVerifier
-				.create(this.profileRepository.findAll().timeout(Duration.ofSeconds(1))
-						.retryWhen(Retry.fixedDelay(2, Duration.ofSeconds(1))
-								.filter(throwable -> throwable instanceof TimeoutException)
-								.doBeforeRetry(retrySignal -> logger.info(retrySignal.copy().toString()))))
-				.expectSubscription().expectNoEvent(Duration.ofSeconds(4)).then(() -> {
-					try {
-						latency.remove();
-					}
-					catch (IOException e) {
-						throw new RuntimeException(e);
-					}
-				}).expectNextCount(4).expectComplete().verify();
+			.create(this.profileRepository.findAll()
+				.timeout(Duration.ofSeconds(1))
+				.retryWhen(Retry.fixedDelay(2, Duration.ofSeconds(1))
+					.filter(throwable -> throwable instanceof TimeoutException)
+					.doBeforeRetry(retrySignal -> logger.info(retrySignal.copy().toString()))))
+			.expectSubscription()
+			.expectNoEvent(Duration.ofSeconds(4))
+			.then(() -> {
+				try {
+					latency.remove();
+				}
+				catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			})
+			.expectNextCount(4)
+			.expectComplete()
+			.verify();
 	}
 
 	@Test
@@ -118,7 +127,7 @@ class SpringBootR2dbcPostgresqlChaosApplicationTests {
 		postgresqlProxy.toxics().bandwidth("postgres-cut-connection-upstream", ToxicDirection.UPSTREAM, 0);
 
 		StepVerifier.create(this.profileRepository.findAll().timeout(Duration.ofSeconds(5)))
-				.verifyErrorSatisfies(throwable -> assertThat(throwable).isInstanceOf(TimeoutException.class));
+			.verifyErrorSatisfies(throwable -> assertThat(throwable).isInstanceOf(TimeoutException.class));
 
 		postgresqlProxy.toxics().get("postgres-cut-connection-downstream").remove();
 		postgresqlProxy.toxics().get("postgres-cut-connection-upstream").remove();

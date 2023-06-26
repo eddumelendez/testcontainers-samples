@@ -29,7 +29,7 @@ class BookRepositoryTest {
 	@Test
 	void test() throws LiquibaseException {
 		var database = (MongoLiquibaseDatabase) DatabaseFactory.getInstance()
-				.openDatabase(mongo.getReplicaSetUrl("test"), null, null, null, null);
+			.openDatabase(mongo.getReplicaSetUrl("test"), null, null, null, null);
 		var liquibase = new Liquibase("db/changelog/db.changelog-master.json", new ClassLoaderResourceAccessor(),
 				database);
 		liquibase.update("");

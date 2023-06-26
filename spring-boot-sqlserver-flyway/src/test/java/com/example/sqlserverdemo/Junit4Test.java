@@ -21,7 +21,7 @@ public class Junit4Test {
 
 	@ClassRule
 	public static MSSQLServerContainer sqlserver = new MSSQLServerContainer("mcr.microsoft.com/mssql/server:2017-CU12")
-			.acceptLicense();
+		.acceptLicense();
 
 	@DynamicPropertySource
 	static void sqlserverProperties(DynamicPropertyRegistry registry) {

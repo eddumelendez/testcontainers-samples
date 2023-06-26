@@ -22,7 +22,7 @@ class SpringCloudConsulApplicationTests {
 
 	@Container
 	private static ConsulContainer consul = new ConsulContainer("consul:1.13.2")
-			.withConsulCommand("kv put config/tc/message Hello");
+		.withConsulCommand("kv put config/tc/message Hello");
 
 	@BeforeAll
 	static void beforeAll() {

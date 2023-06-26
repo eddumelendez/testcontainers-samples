@@ -26,7 +26,8 @@ class SpringCloudAzureStorageBlobApplicationTests {
 
 	@Container
 	private static final GenericContainer<?> azurite = new GenericContainer<>(
-			"mcr.microsoft.com/azure-storage/azurite:latest").withExposedPorts(AZURE_STORAGE_BLOB_PORT);
+			"mcr.microsoft.com/azure-storage/azurite:latest")
+		.withExposedPorts(AZURE_STORAGE_BLOB_PORT);
 
 	@Value("azure-blob://testcontainers/message.txt")
 	private Resource blobFile;
@@ -36,7 +37,7 @@ class SpringCloudAzureStorageBlobApplicationTests {
 		var azuriteHost = azurite.getHost();
 		var azuriteBlobMappedPort = azurite.getMappedPort(AZURE_STORAGE_BLOB_PORT);
 		var connectionString = "DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://%s:%d/devstoreaccount1;"
-				.formatted(azuriteHost, azuriteBlobMappedPort);
+			.formatted(azuriteHost, azuriteBlobMappedPort);
 		registry.add("spring.cloud.azure.storage.blob.connection-string", () -> connectionString);
 	}
 

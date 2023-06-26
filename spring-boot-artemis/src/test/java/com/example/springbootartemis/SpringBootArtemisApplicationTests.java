@@ -26,7 +26,7 @@ class SpringBootArtemisApplicationTests {
 
 	@Container
 	static GenericContainer<?> artemis = new GenericContainer<>("simorex/activemq-artemis:2.28.0-ubuntu-11-jre")
-			.withExposedPorts(61616);
+		.withExposedPorts(61616);
 
 	@DynamicPropertySource
 	static void properties(DynamicPropertyRegistry registry) {

@@ -21,7 +21,7 @@ class SpringCloudZookeeperApplicationTests {
 
 	@Container
 	private static final GenericContainer<?> zookeeper = new GenericContainer<>("zookeeper:3.8.0")
-			.withExposedPorts(ZOOKEEPER_PORT);
+		.withExposedPorts(ZOOKEEPER_PORT);
 
 	@Autowired
 	private Environment environment;
@@ -31,11 +31,14 @@ class SpringCloudZookeeperApplicationTests {
 		var zkConnectionString = "%s:%d".formatted(zookeeper.getHost(), zookeeper.getMappedPort(ZOOKEEPER_PORT));
 		System.setProperty("spring.config.import", "zookeeper:%s/messages".formatted(zkConnectionString));
 
-		var curatorFramework = CuratorFrameworkFactory.builder().connectString(zkConnectionString)
-				.retryPolicy(new RetryOneTime(100)).build();
+		var curatorFramework = CuratorFrameworkFactory.builder()
+			.connectString(zkConnectionString)
+			.retryPolicy(new RetryOneTime(100))
+			.build();
 		curatorFramework.start();
-		curatorFramework.create().creatingParentsIfNeeded().forPath("/messages/zk-tc",
-				"Running Zookeeper with Testcontainers".getBytes());
+		curatorFramework.create()
+			.creatingParentsIfNeeded()
+			.forPath("/messages/zk-tc", "Running Zookeeper with Testcontainers".getBytes());
 		curatorFramework.close();
 	}
 

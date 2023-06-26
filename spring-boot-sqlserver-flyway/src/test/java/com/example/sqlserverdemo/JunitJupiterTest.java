@@ -20,7 +20,7 @@ class JunitJupiterTest {
 	@Container
 	@ServiceConnection
 	private static MSSQLServerContainer sqlserver = new MSSQLServerContainer("mcr.microsoft.com/mssql/server:2017-CU12")
-			.acceptLicense();
+		.acceptLicense();
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;

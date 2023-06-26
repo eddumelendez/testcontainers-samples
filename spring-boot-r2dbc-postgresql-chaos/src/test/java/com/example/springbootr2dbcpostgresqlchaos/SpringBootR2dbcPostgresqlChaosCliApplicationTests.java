@@ -26,17 +26,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 class SpringBootR2dbcPostgresqlChaosCliApplicationTests {
 
 	private static final Logger logger = LoggerFactory
-			.getLogger(SpringBootR2dbcPostgresqlChaosCliApplicationTests.class);
+		.getLogger(SpringBootR2dbcPostgresqlChaosCliApplicationTests.class);
 
 	private static final Network network = Network.newNetwork();
 
 	@Container
 	private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15-alpine")
-			.withNetwork(network).withNetworkAliases("postgres");
+		.withNetwork(network)
+		.withNetworkAliases("postgres");
 
 	@Container
 	private static final ToxiproxyContainer toxiproxy = new ToxiproxyContainer("ghcr.io/shopify/toxiproxy:2.5.0")
-			.withNetwork(network);
+		.withNetwork(network);
 
 	@DynamicPropertySource
 	static void sqlserverProperties(DynamicPropertyRegistry registry) throws Exception {
@@ -72,7 +73,8 @@ class SpringBootR2dbcPostgresqlChaosCliApplicationTests {
 	void withLatencyWithTimeout() throws Exception {
 		execute("./toxiproxy-cli toxic add -t latency --downstream -a latency=1600 -a jitter=100 -n latency_downstream postgresql");
 		StepVerifier.create(this.profileRepository.findAll().timeout(Duration.ofMillis(50)))
-				.expectError(TimeoutException.class).verify();
+			.expectError(TimeoutException.class)
+			.verify();
 
 		execute("./toxiproxy-cli toxic remove -n latency_downstream postgresql");
 	}
@@ -82,18 +84,24 @@ class SpringBootR2dbcPostgresqlChaosCliApplicationTests {
 		execute("./toxiproxy-cli toxic add -t latency --downstream -a latency=1600 -a jitter=100 -n latency_downstream postgresql");
 
 		StepVerifier
-				.create(this.profileRepository.findAll().timeout(Duration.ofSeconds(1))
-						.retryWhen(Retry.fixedDelay(2, Duration.ofSeconds(1))
-								.filter(throwable -> throwable instanceof TimeoutException)
-								.doBeforeRetry(retrySignal -> logger.info(retrySignal.copy().toString()))))
-				.expectSubscription().expectNoEvent(Duration.ofSeconds(4)).then(() -> {
-					try {
-						execute("./toxiproxy-cli toxic remove -n latency_downstream postgresql");
-					}
-					catch (Exception e) {
-						throw new RuntimeException(e);
-					}
-				}).expectNextCount(4).expectComplete().verify();
+			.create(this.profileRepository.findAll()
+				.timeout(Duration.ofSeconds(1))
+				.retryWhen(Retry.fixedDelay(2, Duration.ofSeconds(1))
+					.filter(throwable -> throwable instanceof TimeoutException)
+					.doBeforeRetry(retrySignal -> logger.info(retrySignal.copy().toString()))))
+			.expectSubscription()
+			.expectNoEvent(Duration.ofSeconds(4))
+			.then(() -> {
+				try {
+					execute("./toxiproxy-cli toxic remove -n latency_downstream postgresql");
+				}
+				catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+			})
+			.expectNextCount(4)
+			.expectComplete()
+			.verify();
 	}
 
 	@Test
@@ -102,7 +110,7 @@ class SpringBootR2dbcPostgresqlChaosCliApplicationTests {
 		execute("./toxiproxy-cli toxic add -t bandwidth --upstream -a rate=0 -n bandwidth_upstream postgresql");
 
 		StepVerifier.create(this.profileRepository.findAll().timeout(Duration.ofSeconds(5)))
-				.verifyErrorSatisfies(throwable -> assertThat(throwable).isInstanceOf(TimeoutException.class));
+			.verifyErrorSatisfies(throwable -> assertThat(throwable).isInstanceOf(TimeoutException.class));
 
 		execute("./toxiproxy-cli toxic remove -n bandwidth_downstream postgresql");
 		execute("./toxiproxy-cli toxic remove -n bandwidth_upstream postgresql");

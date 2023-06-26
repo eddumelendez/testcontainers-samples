@@ -19,7 +19,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 class PostgisTest {
 
 	private static final DockerImageName dockerImageName = DockerImageName.parse("postgis/postgis")
-			.withTag("14-3.2-alpine").asCompatibleSubstituteFor("postgres");
+		.withTag("14-3.2-alpine")
+		.asCompatibleSubstituteFor("postgres");
 
 	@Container
 	@ServiceConnection

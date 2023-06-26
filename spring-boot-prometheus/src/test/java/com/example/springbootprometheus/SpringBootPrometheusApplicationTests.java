@@ -31,9 +31,9 @@ class SpringBootPrometheusApplicationTests {
 
 	@Container
 	static final GenericContainer<?> prometheus = new GenericContainer<>("prom/prometheus:v2.37.0")
-			.withExposedPorts(9090)
-			.waitingFor(Wait.forLogMessage("(?s).*Server is ready to receive web requests.*$", 1))
-			.withAccessToHost(true);
+		.withExposedPorts(9090)
+		.waitingFor(Wait.forLogMessage("(?s).*Server is ready to receive web requests.*$", 1))
+		.withAccessToHost(true);
 
 	@BeforeEach
 	void setUp() {
@@ -56,12 +56,19 @@ class SpringBootPrometheusApplicationTests {
 	@Test
 	void contextLoads() {
 		given().port(this.localPort).get("/greetings").then().assertThat().body(equalTo("Hello World"));
-		Awaitility.given().pollInterval(Duration.ofSeconds(2)).atMost(Duration.ofSeconds(15)).ignoreExceptions()
-				.untilAsserted(
-						() -> given().baseUri("http://" + prometheus.getHost()).port(prometheus.getMappedPort(9090))
-								.queryParams(Map.of("query", "http_server_requests_seconds_count{uri=\"/greetings\"}"))
-								.get("/api/v1/query").prettyPeek().then().assertThat().statusCode(200)
-								.body("data.result[0].value", hasItem("1")));
+		Awaitility.given()
+			.pollInterval(Duration.ofSeconds(2))
+			.atMost(Duration.ofSeconds(15))
+			.ignoreExceptions()
+			.untilAsserted(() -> given().baseUri("http://" + prometheus.getHost())
+				.port(prometheus.getMappedPort(9090))
+				.queryParams(Map.of("query", "http_server_requests_seconds_count{uri=\"/greetings\"}"))
+				.get("/api/v1/query")
+				.prettyPeek()
+				.then()
+				.assertThat()
+				.statusCode(200)
+				.body("data.result[0].value", hasItem("1")));
 	}
 
 }
