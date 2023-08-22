@@ -40,7 +40,7 @@ class SpringBootR2dbcPostgresqlChaosApplicationTests {
 		.withNetworkAliases("postgres");
 
 	@Container
-	private static final ToxiproxyContainer toxiproxy = new ToxiproxyContainer("ghcr.io/shopify/toxiproxy:2.5.0")
+	private static final ToxiproxyContainer toxiproxy = new ToxiproxyContainer("ghcr.io/shopify/toxiproxy:2.6.0")
 		.withNetwork(network);
 
 	private static Proxy postgresqlProxy;
