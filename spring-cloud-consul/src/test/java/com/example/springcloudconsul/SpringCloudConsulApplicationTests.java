@@ -21,7 +21,7 @@ class SpringCloudConsulApplicationTests {
 	private int port;
 
 	@Container
-	private static ConsulContainer consul = new ConsulContainer("consul:1.13.2")
+	private static ConsulContainer consul = new ConsulContainer("hashicorp/consul:1.13.2")
 		.withConsulCommand("kv put config/tc/message Hello");
 
 	@BeforeAll
