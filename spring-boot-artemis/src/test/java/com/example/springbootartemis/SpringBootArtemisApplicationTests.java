@@ -25,7 +25,7 @@ import static org.awaitility.Awaitility.waitAtMost;
 class SpringBootArtemisApplicationTests {
 
 	@Container
-	static GenericContainer<?> artemis = new GenericContainer<>("simorex/activemq-artemis:2.28.0-ubuntu-11-jre")
+	static GenericContainer<?> artemis = new GenericContainer<>("apache/activemq-artemis:2.30.0-alpine")
 		.withExposedPorts(61616);
 
 	@DynamicPropertySource
