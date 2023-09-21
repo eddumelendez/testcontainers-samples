@@ -8,13 +8,9 @@ import org.springframework.boot.testcontainers.service.connection.ServiceConnect
 import org.springframework.context.annotation.Bean;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -28,13 +24,9 @@ import static org.awaitility.Awaitility.waitAtMost;
 class SpringBootActiveMQApplicationTests {
 
 	@Container
-	static GenericContainer<?> activemq = new GenericContainer("symptoma/activemq:5.18.0").withExposedPorts(61616);
-
-	@DynamicPropertySource
-	static void properties(DynamicPropertyRegistry registry) {
-		registry.add("spring.activemq.broker-url",
-				() -> "tcp://%s:%d".formatted(activemq.getHost(), activemq.getMappedPort(61616)));
-	}
+	@ServiceConnection(name = "symptoma/activemq")
+	static GenericContainer<?> activemq = new GenericContainer("apache/activemq-classic:5.18.2")
+		.withExposedPorts(61616);
 
 	@Autowired
 	private JmsTemplate jmsTemplate;
