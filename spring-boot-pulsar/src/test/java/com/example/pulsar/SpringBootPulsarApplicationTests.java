@@ -5,11 +5,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.context.annotation.Bean;
 import org.springframework.pulsar.annotation.PulsarListener;
 import org.springframework.pulsar.core.PulsarTemplate;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PulsarContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -27,12 +26,8 @@ import static org.awaitility.Awaitility.waitAtMost;
 class SpringBootPulsarApplicationTests {
 
 	@Container
-	static PulsarContainer pulsar = new PulsarContainer(DockerImageName.parse("apachepulsar/pulsar:2.11.0"));
-
-	@DynamicPropertySource
-	static void pulsarProperties(DynamicPropertyRegistry registry) {
-		registry.add("spring.pulsar.client.service-url", pulsar::getPulsarBrokerUrl);
-	}
+	@ServiceConnection
+	static PulsarContainer pulsar = new PulsarContainer(DockerImageName.parse("apachepulsar/pulsar:3.1.0"));
 
 	@Autowired
 	private PulsarTemplate<String> pulsarTemplate;
