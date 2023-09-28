@@ -1,0 +1,8 @@
+[
+  {
+    "name": "postgresql",
+    "listen": "0.0.0.0:8666",
+    "upstream": "postgres:5432",
+    "enabled": true
+  }
+]
