@@ -5,8 +5,12 @@ import org.apache.curator.retry.RetryOneTime;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -14,6 +18,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@ContextConfiguration(initializers = ConfigDataApplicationContextInitializer.class)
 @Testcontainers
 class SpringCloudZookeeperApplicationTests {
 
@@ -26,10 +31,17 @@ class SpringCloudZookeeperApplicationTests {
 	@Autowired
 	private Environment environment;
 
+	@DynamicPropertySource
+	static void properties(DynamicPropertyRegistry registry) {
+		registry.add("spring.cloud.zookeeper.connect-string",
+				() -> "%s:%d".formatted(zookeeper.getHost(), zookeeper.getMappedPort(ZOOKEEPER_PORT)));
+		registry.add("spring.config.import", () -> "zookeeper:%s:%d/messages".formatted(zookeeper.getHost(),
+				zookeeper.getMappedPort(ZOOKEEPER_PORT)));
+	}
+
 	@BeforeAll
 	static void beforeAll() throws Exception {
 		var zkConnectionString = "%s:%d".formatted(zookeeper.getHost(), zookeeper.getMappedPort(ZOOKEEPER_PORT));
-		System.setProperty("spring.config.import", "zookeeper:%s/messages".formatted(zkConnectionString));
 
 		var curatorFramework = CuratorFrameworkFactory.builder()
 			.connectString(zkConnectionString)
