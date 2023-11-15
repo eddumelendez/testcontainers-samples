@@ -20,6 +20,7 @@
         <module>spring-boot-kafka</module>
 <!--        <module>spring-boot-kafka-chaos</module>-->
         <module>spring-boot-mongodb-liquibase</module>
+        <module>spring-boot-oracle</module>
         <module>spring-boot-redis-pubsub</module>
         <module>spring-boot-redis-stream</module>
         <module>spring-boot-sqlserver-flyway</module>
