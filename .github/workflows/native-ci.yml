@@ -1,0 +1,37 @@
+name: Native Image CI with Maven
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  find-submodules:
+    name: Find submodules
+    runs-on: ubuntu-22.04
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Find submodules
+        run: |
+          SUBMODULES=$(./mvnw -Dexec.executable='echo' -Dexec.args='${project.artifactId}' exec:exec -q | jq -Rn '[inputs]')
+  build:
+    name: "Test with ${{ matrix.os }}"
+    needs: [find-submodules]
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-22.04 ]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '21'
+      - name: Build with Maven
+        run: ./mvnw test -PnativeTest
