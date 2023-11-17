@@ -17,7 +17,7 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       - uses: actions/checkout@v4
-      - name: Find submodules
+      - id: set-matrix
         run: |
           SUBMODULES=$(./mvnw -Dexec.executable='echo' -Dexec.args='${project.artifactId}' exec:exec -q | jq -Rn '[inputs]' --compact-output)
           echo $SUBMODULES
