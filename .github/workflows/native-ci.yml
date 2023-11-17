@@ -23,7 +23,6 @@ jobs:
           echo $SUBMODULES
           echo "matrix={\"maven_submodules\":$SUBMODULES}" >> $GITHUB_OUTPUT
   build:
-    name: "Test native images"
     needs: [find-submodules]
     strategy:
       fail-fast: false
