@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 jobs:
-  find-submodules:
+  find_submodules:
     name: Find submodules
     runs-on: ubuntu-22.04
     outputs:
@@ -23,11 +23,11 @@ jobs:
           echo $SUBMODULES
           echo "matrix={\"maven_submodules\":$SUBMODULES}" >> $GITHUB_OUTPUT
   build:
-    needs: [find-submodules]
+    needs: [find_submodules]
     strategy:
       fail-fast: false
       matrix:
-        matrix: ${{ fromJson(needs.find-submodules.outputs.matrix) }}
+        matrix: ${{ fromJson(needs.find_submodules.outputs.matrix) }}
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
