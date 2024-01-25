@@ -25,7 +25,7 @@ class SpringBootActiveMQApplicationTests {
 
 	@Container
 	@ServiceConnection(name = "symptoma/activemq")
-	static GenericContainer<?> activemq = new GenericContainer("apache/activemq-classic:5.18.2")
+	static GenericContainer<?> activemq = new GenericContainer("apache/activemq-classic:5.18.3")
 		.withExposedPorts(61616);
 
 	@Autowired
