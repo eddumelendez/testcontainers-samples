@@ -15,7 +15,7 @@
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>21</java.version>
-		<testcontainers.version>1.19.4</testcontainers.version>
+		<testcontainers.version>1.19.5</testcontainers.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -36,6 +36,11 @@
 		<dependency>
 			<groupId>org.testcontainers</groupId>
 			<artifactId>junit-jupiter</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>activemq</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
