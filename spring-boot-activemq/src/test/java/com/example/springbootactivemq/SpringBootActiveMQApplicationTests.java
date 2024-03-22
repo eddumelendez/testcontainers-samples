@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
 import org.testcontainers.activemq.ActiveMQContainer;
-import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
