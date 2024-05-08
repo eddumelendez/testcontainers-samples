@@ -16,7 +16,7 @@
 	<properties>
 		<java.version>21</java.version>
 		<liquibase-mongodb.version>4.24.0</liquibase-mongodb.version>
-		<testcontainers.version>1.19.7</testcontainers.version>
+		<testcontainers.version>1.19.8</testcontainers.version>
 	</properties>
 	<dependencies>
 		<dependency>
