@@ -4,11 +4,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.activemq.ArtemisContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -25,14 +24,8 @@ import static org.awaitility.Awaitility.waitAtMost;
 class SpringBootArtemisApplicationTests {
 
 	@Container
+	@ServiceConnection
 	static ArtemisContainer artemis = new ArtemisContainer("apache/activemq-artemis:2.30.0-alpine");
-
-	@DynamicPropertySource
-	static void properties(DynamicPropertyRegistry registry) {
-		registry.add("spring.artemis.broker-url", artemis::getBrokerUrl);
-		registry.add("spring.artemis.user", artemis::getUser);
-		registry.add("spring.artemis.password", artemis::getPassword);
-	}
 
 	@Autowired
 	private JmsTemplate jmsTemplate;
