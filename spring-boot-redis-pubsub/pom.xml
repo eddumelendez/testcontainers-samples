@@ -15,6 +15,7 @@
 	<description>spring-boot-redis-pubsub</description>
 	<properties>
 		<java.version>21</java.version>
+		<testcontainers.version>1.20.0</testcontainers.version>
 	</properties>
 	<dependencies>
 		<dependency>
