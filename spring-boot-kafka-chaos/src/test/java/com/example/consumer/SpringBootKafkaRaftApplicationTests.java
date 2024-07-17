@@ -33,7 +33,7 @@ class SpringBootKafkaRaftApplicationTests {
 	static Network network = Network.newNetwork();
 
 	@Container
-	static ToxiproxyContainer toxiproxy = new ToxiproxyContainer("ghcr.io/shopify/toxiproxy:2.8.0")
+	static ToxiproxyContainer toxiproxy = new ToxiproxyContainer("ghcr.io/shopify/toxiproxy:2.9.0")
 		.withNetwork(network);
 
 	@Container
