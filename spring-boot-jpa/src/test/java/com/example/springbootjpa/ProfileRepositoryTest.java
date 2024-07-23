@@ -14,7 +14,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Testcontainers
-@DataJpaTest
+@DataJpaTest(properties = "spring.jpa.generate-ddl=true")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class ProfileRepositoryTest {
 
