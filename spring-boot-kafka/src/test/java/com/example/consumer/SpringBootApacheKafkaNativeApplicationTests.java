@@ -13,7 +13,6 @@ import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.kafka.KafkaContainer;
-import org.testcontainers.utility.DockerImageName;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -28,8 +27,7 @@ import static org.awaitility.Awaitility.waitAtMost;
 class SpringBootApacheKafkaNativeApplicationTests {
 
 	@Container
-	static KafkaContainer kafka = new KafkaContainer(
-			DockerImageName.parse("krishnaconfluent/kafka-native").asCompatibleSubstituteFor("apache/kafka"));
+	static KafkaContainer kafka = new KafkaContainer("apache/kafka-native:3.8.0");
 
 	@DynamicPropertySource
 	static void properties(DynamicPropertyRegistry registry) {
