@@ -3,10 +3,9 @@ package com.example.springcloudazureblob;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.WritableResource;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.util.StreamUtils;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -25,21 +24,13 @@ class SpringCloudAzureStorageBlobApplicationTests {
 	private static final int AZURE_STORAGE_BLOB_PORT = 10000;
 
 	@Container
+	@ServiceConnection
 	private static final GenericContainer<?> azurite = new GenericContainer<>(
 			"mcr.microsoft.com/azure-storage/azurite:latest")
-		.withExposedPorts(AZURE_STORAGE_BLOB_PORT);
+		.withExposedPorts(AZURE_STORAGE_BLOB_PORT, 10001);
 
 	@Value("azure-blob://testcontainers/message.txt")
 	private Resource blobFile;
-
-	@DynamicPropertySource
-	static void properties(DynamicPropertyRegistry registry) {
-		var azuriteHost = azurite.getHost();
-		var azuriteBlobMappedPort = azurite.getMappedPort(AZURE_STORAGE_BLOB_PORT);
-		var connectionString = "DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://%s:%d/devstoreaccount1;"
-			.formatted(azuriteHost, azuriteBlobMappedPort);
-		registry.add("spring.cloud.azure.storage.blob.connection-string", () -> connectionString);
-	}
 
 	@Test
 	void contextLoads() throws IOException {
