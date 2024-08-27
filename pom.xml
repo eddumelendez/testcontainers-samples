@@ -36,6 +36,7 @@
         <module>spring-cloud-vault</module>
         <module>spring-cloud-zookeeper</module>
         <module>spring-cloud-azure-storage</module>
+        <module>spring-cloud-azure-eventhubs</module>
         <module>spring-boot-r2dbc-postgresql-chaos</module>
         <module>spring-boot-rabbitmq</module>
     </modules>
