@@ -40,7 +40,7 @@ class SpringCloudAzureEventHubsApplicationTests {
 
 	private static final int AZURE_STORAGE_TABLE_PORT = 10002;
 
-	private static final int AZURE_EVENTHUBS_BLOB_PORT = 5672;
+	private static final int AZURE_EVENTHUBS_PORT = 5672;
 
 	@Container
 	private static final GenericContainer<?> azurite = new GenericContainer<>(
@@ -52,7 +52,7 @@ class SpringCloudAzureEventHubsApplicationTests {
 	@Container
 	private static final GenericContainer<?> eventHubs = new GenericContainer<>(
 			"mcr.microsoft.com/azure-messaging/eventhubs-emulator:latest")
-		.withExposedPorts(AZURE_EVENTHUBS_BLOB_PORT)
+		.withExposedPorts(AZURE_EVENTHUBS_PORT)
 		.withCopyFileToContainer(MountableFile.forClasspathResource("Config.json"),
 				"/Eventhubs_Emulator/ConfigFiles/Config.json")
 		.waitingFor(Wait.forLogMessage(".*Emulator Service is Successfully Up!.*", 1))
@@ -70,7 +70,7 @@ class SpringCloudAzureEventHubsApplicationTests {
 	@DynamicPropertySource
 	static void properties(DynamicPropertyRegistry registry) {
 		var eventHubsHost = eventHubs.getHost();
-		var eventHubsMappedPort = eventHubs.getMappedPort(AZURE_EVENTHUBS_BLOB_PORT);
+		var eventHubsMappedPort = eventHubs.getMappedPort(AZURE_EVENTHUBS_PORT);
 		var connectionString = "Endpoint=sb://%s:%d;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=SAS_KEY_VALUE;UseDevelopmentEmulator=true;"
 			.formatted(eventHubsHost, eventHubsMappedPort);
 		registry.add("spring.cloud.azure.eventhubs.connection-string", () -> connectionString);
