@@ -4,7 +4,6 @@ import io.synthesized.tdktc.SynthesizedTDK;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.sql.init.dependency.DependsOnDatabaseInitialization;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,7 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Testcontainers
 @JdbcTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class PostgresTest {
 
 	private static Network network = Network.newNetwork();
