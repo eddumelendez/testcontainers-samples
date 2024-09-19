@@ -17,7 +17,7 @@ class JunitJupiterTest {
 
 	@Container
 	@ServiceConnection
-	private static MSSQLServerContainer sqlserver = new MSSQLServerContainer("mcr.microsoft.com/mssql/server:2017-CU12")
+	private static MSSQLServerContainer sqlserver = new MSSQLServerContainer("mcr.microsoft.com/mssql/server:2022-CU14-ubuntu-22.04")
 		.acceptLicense();
 
 	@Autowired

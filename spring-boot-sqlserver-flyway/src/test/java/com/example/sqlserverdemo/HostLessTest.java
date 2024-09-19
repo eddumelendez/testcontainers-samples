@@ -9,7 +9,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Testcontainers
-@DataJdbcTest(properties = { "spring.datasource.url=jdbc:tc:sqlserver:latest:///" })
+@DataJdbcTest(properties = { "spring.datasource.url=jdbc:tc:sqlserver:2022-CU14-ubuntu-22.04:///" })
 class HostLessTest {
 
 	@Autowired

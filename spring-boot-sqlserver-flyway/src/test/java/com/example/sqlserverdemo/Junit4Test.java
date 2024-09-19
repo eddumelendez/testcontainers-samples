@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class Junit4Test {
 
 	@ClassRule
-	public static MSSQLServerContainer sqlserver = new MSSQLServerContainer("mcr.microsoft.com/mssql/server:2017-CU12")
+	public static MSSQLServerContainer sqlserver = new MSSQLServerContainer("mcr.microsoft.com/mssql/server:2022-CU14-ubuntu-22.04")
 		.acceptLicense();
 
 	@DynamicPropertySource
