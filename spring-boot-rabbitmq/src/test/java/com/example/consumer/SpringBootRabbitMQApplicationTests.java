@@ -26,7 +26,7 @@ class SpringBootRabbitMQApplicationTests {
 
 	@Container
 	@ServiceConnection
-	static RabbitMQContainer rabbitmq = new RabbitMQContainer("rabbitmq:3.11-alpine");
+	static RabbitMQContainer rabbitmq = new RabbitMQContainer("rabbitmq:4.0.0-alpine");
 
 	@Autowired
 	private AmqpTemplate amqpTemplate;
