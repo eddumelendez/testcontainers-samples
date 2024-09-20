@@ -25,9 +25,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.awaitility.Awaitility.waitAtMost;
 
-@SpringBootTest
+@SpringBootTest(properties = "spring.kafka.consumer.auto-offset-reset=earliest")
 @Testcontainers
-@TestPropertySource(properties = "spring.kafka.consumer.auto-offset-reset=earliest")
 class SpringBootKafkaLocalRaftApplicationTests {
 
 	private static final String APPLICATION_VND_KAFKA_JSON_V_2_JSON = "application/vnd.kafka.json.v2+json";

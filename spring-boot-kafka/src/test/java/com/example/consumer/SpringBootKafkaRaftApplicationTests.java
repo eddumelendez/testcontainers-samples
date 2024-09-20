@@ -21,9 +21,8 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.waitAtMost;
 
-@SpringBootTest
+@SpringBootTest(properties = "spring.kafka.consumer.auto-offset-reset=earliest")
 @Testcontainers
-@TestPropertySource(properties = "spring.kafka.consumer.auto-offset-reset=earliest")
 class SpringBootKafkaRaftApplicationTests {
 
 	@Container
