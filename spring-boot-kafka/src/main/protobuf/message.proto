@@ -1,0 +1,6 @@
+syntax = "proto3";
+package com.example.protobuf;
+
+message MyMessage {
+  string text = 1;
+}
