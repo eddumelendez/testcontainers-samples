@@ -1,0 +1,8 @@
+{
+  "type": "record",
+  "name": "Message",
+  "namespace": "com.example.avro",
+  "fields": [
+    {"name": "text", "type":"string", "doc": "Message content"}
+  ]
+}
