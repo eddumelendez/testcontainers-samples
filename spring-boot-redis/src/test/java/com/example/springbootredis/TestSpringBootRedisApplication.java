@@ -1,4 +1,4 @@
-package com.example.springbootredispubsub;
+package com.example.springbootredis;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -8,7 +8,7 @@ import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.DockerImageName;
 
 @TestConfiguration(proxyBeanMethods = false)
-public class TestSpringBootRedisPubsubApplication {
+public class TestSpringBootRedisApplication {
 
 	@Bean
 	@ServiceConnection(name = "redis")
@@ -17,9 +17,7 @@ public class TestSpringBootRedisPubsubApplication {
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.from(SpringBootRedisPubsubApplication::main)
-			.with(TestSpringBootRedisPubsubApplication.class)
-			.run(args);
+		SpringApplication.from(SpringBootRedisApplication::main).with(TestSpringBootRedisApplication.class).run(args);
 	}
 
 }

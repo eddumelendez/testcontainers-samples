@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>spring-boot-redis-pubsub</artifactId>
+	<artifactId>spring-boot-redis</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>spring-boot-redis-pubsub</name>
-	<description>spring-boot-redis-pubsub</description>
+	<name>spring-boot-redis</name>
+	<description>spring-boot-redis</description>
 	<properties>
 		<java.version>21</java.version>
 		<testcontainers.version>1.20.1</testcontainers.version>

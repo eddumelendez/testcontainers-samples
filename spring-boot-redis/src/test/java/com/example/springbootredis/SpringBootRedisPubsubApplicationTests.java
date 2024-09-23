@@ -1,4 +1,4 @@
-package com.example.springbootredispubsub;
+package com.example.springbootredis;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
