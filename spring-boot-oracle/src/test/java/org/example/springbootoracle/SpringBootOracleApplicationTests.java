@@ -17,7 +17,7 @@ class SpringBootOracleApplicationTests {
 
 	@Container
 	@ServiceConnection
-	static OracleContainer oracle = new OracleContainer("gvenzl/oracle-free:23.3-slim-faststart");
+	static OracleContainer oracle = new OracleContainer("gvenzl/oracle-free:23.5-slim-faststart");
 
 	@Autowired
 	private JdbcClient jdbcClient;
