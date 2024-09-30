@@ -1,6 +1,5 @@
 package com.example.pulsar;
 
-import org.apache.pulsar.client.api.PulsarClientException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,7 +35,7 @@ class SpringBootPulsarApplicationTests {
 	private TestListener testListener;
 
 	@Test
-	void consumeMessage() throws PulsarClientException {
+	void consumeMessage() {
 		this.pulsarTemplate.send("test", "test-data");
 
 		waitAtMost(Duration.ofSeconds(30)).untilAsserted(() -> {
