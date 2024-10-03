@@ -1,6 +1,5 @@
 package com.example.consumer;
 
-import com.example.container.ToxicRedpandaContainer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.ToxiproxyContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -25,9 +23,8 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.waitAtMost;
 
-@SpringBootTest
+@SpringBootTest(properties = "spring.kafka.consumer.auto-offset-reset=earliest")
 @Testcontainers
-@TestPropertySource(properties = "spring.kafka.consumer.auto-offset-reset=earliest")
 class SpringBootRedpandaApplicationTests {
 
 	static Network network = Network.newNetwork();
@@ -37,10 +34,10 @@ class SpringBootRedpandaApplicationTests {
 		.withNetwork(network);
 
 	@Container
-	static RedpandaContainer redpanda = new ToxicRedpandaContainer("docker.redpanda.com/redpandadata/redpanda:v23.2.1")
-		.withAdditionalListener(() -> String.format("%s:%s", toxiproxy.getHost(), toxiproxy.getMappedPort(8666)))
+	static RedpandaContainer redpanda = new RedpandaContainer("docker.redpanda.com/redpandadata/redpanda:v23.2.1")
+		.withListener("redpanda:19092",
+				() -> String.format("%s:%s", toxiproxy.getHost(), toxiproxy.getMappedPort(8666)))
 		.withNetwork(network)
-		.withNetworkAliases("redpanda")
 		.dependsOn(toxiproxy);
 
 	@DynamicPropertySource
@@ -48,7 +45,7 @@ class SpringBootRedpandaApplicationTests {
 		execute("./toxiproxy-cli create -l 0.0.0.0:8666 -u redpanda:19092 redpanda");
 
 		registry.add("spring.kafka.bootstrap-servers",
-				() -> "PLAINTEXT://%s:%d".formatted(toxiproxy.getHost(), toxiproxy.getMappedPort(8666)));
+				() -> "%s:%d".formatted(toxiproxy.getHost(), toxiproxy.getMappedPort(8666)));
 	}
 
 	@Autowired

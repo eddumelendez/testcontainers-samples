@@ -1,6 +1,5 @@
 package com.example.consumer;
 
-import com.example.container.ToxicKafkaRaftContainer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +10,11 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.ToxiproxyContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.kafka.ConfluentKafkaContainer;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -35,11 +34,9 @@ class SpringBootKafkaRaftApplicationTests {
 		.withNetwork(network);
 
 	@Container
-	static KafkaContainer kafka = new ToxicKafkaRaftContainer("confluentinc/cp-kafka:7.4.0")
-		.withAdditionalListener(() -> String.format("%s:%s", toxiproxy.getHost(), toxiproxy.getMappedPort(8666)))
-		.withKraft()
+	static ConfluentKafkaContainer kafka = new ConfluentKafkaContainer("confluentinc/cp-kafka:7.4.0")
+		.withListener("kafka:19092", () -> String.format("%s:%s", toxiproxy.getHost(), toxiproxy.getMappedPort(8666)))
 		.withNetwork(network)
-		.withNetworkAliases("kafka")
 		.dependsOn(toxiproxy)
 		.withEnv("KAFKA_SOCKET_CONNECTION_SETUP_TIMEOUT_MS", "1000")
 		.withEnv("KAFKA_SOCKET_CONNECTION_SETUP_TIMEOUT_MAX_MS", "5000");
@@ -49,7 +46,7 @@ class SpringBootKafkaRaftApplicationTests {
 		execute("./toxiproxy-cli create -l 0.0.0.0:8666 -u kafka:19092 kafka");
 
 		registry.add("spring.kafka.bootstrap-servers",
-				() -> "PLAINTEXT://%s:%d".formatted(toxiproxy.getHost(), toxiproxy.getMappedPort(8666)));
+				() -> "%s:%d".formatted(toxiproxy.getHost(), toxiproxy.getMappedPort(8666)));
 	}
 
 	@Autowired
