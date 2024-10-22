@@ -25,7 +25,7 @@ class SpringBootArtemisApplicationTests {
 
 	@Container
 	@ServiceConnection
-	static ArtemisContainer artemis = new ArtemisContainer("apache/activemq-artemis:2.30.0-alpine");
+	static ArtemisContainer artemis = new ArtemisContainer("apache/activemq-artemis:2.32.0-alpine");
 
 	@Autowired
 	private JmsTemplate jmsTemplate;
