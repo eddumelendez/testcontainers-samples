@@ -69,12 +69,8 @@ class BookRepositoryBitnamiMongoDbShardedTest {
 
 	@DynamicPropertySource
 	static void mongoProperties(DynamicPropertyRegistry registry) {
-		registry.add("spring.data.mongodb.host", mongos::getHost);
-		registry.add("spring.data.mongodb.port", () -> mongos.getMappedPort(27017));
-		registry.add("spring.data.mongodb.username", () -> "root");
-		registry.add("spring.data.mongodb.password", () -> "test");
-		registry.add("spring.data.mongodb.database", () -> "test");
-		registry.add("spring.data.mongodb.authentication-database", () -> "admin");
+		registry.add("spring.data.mongodb.uri", () -> "mongodb://root:test@%s:%d/test?authSource=admin"
+			.formatted(mongos.getHost(), mongos.getMappedPort(27017)));
 	}
 
 	@Autowired
