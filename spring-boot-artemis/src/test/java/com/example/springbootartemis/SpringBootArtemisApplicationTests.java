@@ -9,8 +9,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
 import org.testcontainers.activemq.ArtemisContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -20,12 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.waitAtMost;
 
 @SpringBootTest
-@Testcontainers
 class SpringBootArtemisApplicationTests {
-
-	@Container
-	@ServiceConnection
-	static ArtemisContainer artemis = new ArtemisContainer("apache/activemq-artemis:2.32.0-alpine");
 
 	@Autowired
 	private JmsTemplate jmsTemplate;
@@ -59,6 +52,17 @@ class SpringBootArtemisApplicationTests {
 		@JmsListener(destination = "test")
 		void listen(String data) {
 			this.messages.add(data);
+		}
+
+	}
+
+	@TestConfiguration
+	static class TestcontainersConfiguration {
+
+		@Bean
+		@ServiceConnection
+		ArtemisContainer artemis() {
+			return new ArtemisContainer("apache/activemq-artemis:2.32.0-alpine");
 		}
 
 	}
