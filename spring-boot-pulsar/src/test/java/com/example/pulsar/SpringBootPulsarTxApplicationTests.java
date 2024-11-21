@@ -10,8 +10,6 @@ import org.springframework.pulsar.annotation.PulsarListener;
 import org.springframework.pulsar.core.PulsarTemplate;
 import org.springframework.pulsar.listener.AckMode;
 import org.testcontainers.containers.PulsarContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
 import java.time.Duration;
@@ -22,13 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.waitAtMost;
 
 @SpringBootTest(properties = "spring.pulsar.transaction.enabled=true")
-@Testcontainers
 class SpringBootPulsarTxApplicationTests {
-
-	@Container
-	@ServiceConnection
-	static PulsarContainer pulsar = new PulsarContainer(DockerImageName.parse("apachepulsar/pulsar:3.1.0"))
-		.withTransactions();
 
 	@Autowired
 	private PulsarTemplate<String> pulsarTemplate;
@@ -62,6 +54,17 @@ class SpringBootPulsarTxApplicationTests {
 		@PulsarListener(topics = "test", ackMode = AckMode.RECORD)
 		void listen(String data) {
 			this.messages.add(data);
+		}
+
+	}
+
+	@TestConfiguration
+	static class TestcontainersConfiguration {
+
+		@Bean
+		@ServiceConnection
+		PulsarContainer pulsar() {
+			return new PulsarContainer(DockerImageName.parse("apachepulsar/pulsar:3.1.0")).withTransactions();
 		}
 
 	}

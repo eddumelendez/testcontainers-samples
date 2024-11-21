@@ -10,8 +10,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.pulsar.annotation.PulsarListener;
 import org.springframework.pulsar.core.PulsarTemplate;
 import org.testcontainers.containers.PulsarContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
 import java.time.Duration;
@@ -24,12 +22,7 @@ import static org.awaitility.Awaitility.waitAtMost;
 @SpringBootTest(properties = { "spring.pulsar.defaults.type-mappings[0].message-type=com.example.avro.Message",
 		"spring.pulsar.defaults.type-mappings[0].topic-name=test",
 		"spring.pulsar.defaults.type-mappings[0].schema-info.schema-type=AVRO" })
-@Testcontainers
 class SpringBootPulsarAvroApplicationTests {
-
-	@Container
-	@ServiceConnection
-	static PulsarContainer pulsar = new PulsarContainer(DockerImageName.parse("apachepulsar/pulsar:3.1.0"));
 
 	@Autowired
 	private PulsarTemplate<Message> pulsarTemplate;
@@ -64,6 +57,17 @@ class SpringBootPulsarAvroApplicationTests {
 		@PulsarListener
 		void listen(Message data) {
 			this.messages.add(data);
+		}
+
+	}
+
+	@TestConfiguration
+	static class TestcontainersConfiguration {
+
+		@Bean
+		@ServiceConnection
+		PulsarContainer pulsar() {
+			return new PulsarContainer(DockerImageName.parse("apachepulsar/pulsar:3.1.0"));
 		}
 
 	}
