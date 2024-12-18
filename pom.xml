@@ -16,6 +16,7 @@
         <module>spring-boot-cockroachdb-flyway</module>
         <module>spring-boot-cockroachdb-liquibase</module>
         <module>spring-boot-elasticsearch</module>
+        <module>spring-boot-hazelcast</module>
         <module>spring-boot-jdbc-postgresql-chaos</module>
         <module>spring-boot-jpa</module>
         <module>spring-boot-kafka</module>
