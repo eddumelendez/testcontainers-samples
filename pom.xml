@@ -20,6 +20,7 @@
         <module>spring-boot-jdbc-postgresql-chaos</module>
         <module>spring-boot-jpa</module>
         <module>spring-boot-kafka</module>
+        <module>spring-boot-kafka-streams</module>
 <!--        <module>spring-boot-kafka-chaos</module>-->
         <module>spring-boot-mongodb-liquibase</module>
         <module>spring-boot-oracle</module>
