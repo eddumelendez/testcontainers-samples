@@ -12,7 +12,8 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.context.TestPropertySource;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.images.builder.Transferable;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -30,6 +31,9 @@ import static org.awaitility.Awaitility.waitAtMost;
 class SpringBootKafkaLocalRaftApplicationTests {
 
 	private static final String APPLICATION_VND_KAFKA_JSON_V_2_JSON = "application/vnd.kafka.json.v2+json";
+
+	@Container
+	static KCatContainer kcat = new KCatContainer();
 
 	@Container
 	static KafkaLocalContainer kafka = new KafkaLocalContainer("confluentinc/confluent-local:7.4.1");
@@ -50,6 +54,11 @@ class SpringBootKafkaLocalRaftApplicationTests {
 		this.kafkaTemplate.send("test", "test-data");
 
 		waitAtMost(Duration.ofSeconds(30)).untilAsserted(() -> {
+			String stdout = kcat
+				.execInContainer("kcat", "-b", "host.docker.internal:%s".formatted(kafka.getMappedPort(29094)), "-C",
+						"-t", "test", "-c", "1")
+				.getStdout();
+			assertThat(stdout).contains("test-data");
 			assertThat(this.testListener.messages).hasSize(1);
 		});
 
@@ -99,6 +108,20 @@ class SpringBootKafkaLocalRaftApplicationTests {
 		@KafkaListener(topics = "test", groupId = "test")
 		void listen(String data) {
 			this.messages.add(data);
+		}
+
+	}
+
+	static class KCatContainer extends GenericContainer<KCatContainer> {
+
+		public KCatContainer() {
+			super("confluentinc/cp-kcat:7.4.1");
+			withCreateContainerCmdModifier(cmd -> {
+				cmd.withEntrypoint("sh");
+			});
+			withCopyToContainer(Transferable.of("Message produced by kcat"), "/data/msgs.txt");
+			withCommand("-c", "tail -f /dev/null");
+			withExtraHost("host.docker.internal", "host-gateway");
 		}
 
 	}

@@ -13,7 +13,7 @@ public class KafkaLocalContainer extends GenericContainer<KafkaLocalContainer> {
 
 	public KafkaLocalContainer(String image) {
 		super(DockerImageName.parse(image));
-		withExposedPorts(9092, 8082);
+		withExposedPorts(9092, 8082, 29094);
 		var waitStrategy = new WaitAllStrategy().withStrategy(Wait.forLogMessage(".*started.*\\n", 1))
 			.withStrategy(Wait.forHttp("/").forPort(8082).forStatusCode(200));
 		waitingFor(waitStrategy);
@@ -25,10 +25,10 @@ public class KafkaLocalContainer extends GenericContainer<KafkaLocalContainer> {
 
 	@Override
 	protected void containerIsStarting(InspectContainerResponse containerInfo) {
-		var defaultListeners = "PLAINTEXT://localhost:29092,CONTROLLER://localhost:29093,PLAINTEXT_HOST://0.0.0.0:9092";
-		var defaultAdvertisedListeners = "PLAINTEXT://localhost:29092,PLAINTEXT_HOST://%s:%d".formatted(getHost(),
-				getMappedPort(9092));
-		var defaultSecurityProtocolMap = "CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT";
+		var defaultListeners = "x://0.0.0.0:29094,PLAINTEXT://localhost:29092,CONTROLLER://localhost:29093,PLAINTEXT_HOST://0.0.0.0:9092";
+		var defaultAdvertisedListeners = "x://host.docker.internal:%s,PLAINTEXT://localhost:29092,PLAINTEXT_HOST://%s:%d"
+			.formatted(getMappedPort(29094), getHost(), getMappedPort(9092));
+		var defaultSecurityProtocolMap = "x:PLAINTEXT,CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT";
 
 		var script = """
 				#!/bin/bash
@@ -42,7 +42,7 @@ public class KafkaLocalContainer extends GenericContainer<KafkaLocalContainer> {
 	}
 
 	public String getBootstrapServer() {
-		return "PLAINTEXT://%s:%d".formatted(getHost(), getMappedPort(9092));
+		return "%s:%d".formatted(getHost(), getMappedPort(9092));
 	}
 
 	public String getRestProxyUrl() {
