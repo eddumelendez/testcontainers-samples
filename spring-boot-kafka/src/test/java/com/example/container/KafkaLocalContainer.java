@@ -42,7 +42,7 @@ public class KafkaLocalContainer extends GenericContainer<KafkaLocalContainer> {
 	}
 
 	public String getBootstrapServer() {
-		return "PLAINTEXT://%s:%d".formatted(getHost(), getMappedPort(9092));
+		return "%s:%d".formatted(getHost(), getMappedPort(9092));
 	}
 
 	public String getRestProxyUrl() {
