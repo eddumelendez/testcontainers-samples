@@ -46,7 +46,7 @@ class SpringBootKafkaStreamsApplicationTests {
 
 	@Container
 	@ServiceConnection
-	static KafkaContainer kafka = new KafkaContainer("apache/kafka:3.8.0");
+	static KafkaContainer kafka = new KafkaContainer("apache/kafka-native:3.8.0");
 
 	@Autowired
 	private KafkaTemplate<String, String> kafkaTemplate;
