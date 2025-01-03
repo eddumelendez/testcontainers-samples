@@ -14,7 +14,7 @@ import org.testcontainers.containers.Network;
 import org.testcontainers.containers.ToxiproxyContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.kafka.ConfluentKafkaContainer;
+import org.testcontainers.kafka.KafkaContainer;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ class SpringBootKafkaRaftApplicationTests {
 		.withNetwork(network);
 
 	@Container
-	static ConfluentKafkaContainer kafka = new ConfluentKafkaContainer("confluentinc/cp-kafka:7.4.0")
+	static KafkaContainer kafka = new KafkaContainer("apache/kafka:3.8.0")
 		.withListener("kafka:19092", () -> String.format("%s:%s", toxiproxy.getHost(), toxiproxy.getMappedPort(8666)))
 		.withNetwork(network)
 		.dependsOn(toxiproxy)
