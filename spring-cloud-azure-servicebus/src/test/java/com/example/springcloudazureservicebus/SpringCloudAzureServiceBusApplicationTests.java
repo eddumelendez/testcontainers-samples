@@ -5,9 +5,7 @@ import com.azure.messaging.servicebus.ServiceBusReceivedMessage;
 import com.azure.messaging.servicebus.ServiceBusSenderClient;
 import com.azure.spring.cloud.service.servicebus.consumer.ServiceBusErrorHandler;
 import com.azure.spring.cloud.service.servicebus.consumer.ServiceBusRecordMessageListener;
-import com.github.dockerjava.api.model.Capability;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -15,6 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.MSSQLServerContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
@@ -37,14 +36,11 @@ class SpringCloudAzureServiceBusApplicationTests {
 
 	private static final int AZURE_SERVICEBUS_PORT = 5672;
 
-	private static final GenericContainer<?> azureSqlEdge = new GenericContainer<>(
-			"mcr.microsoft.com/azure-sql-edge:latest")
-		.withExposedPorts(1433)
+	private static MSSQLServerContainer<?> sqlserver = new MSSQLServerContainer<>(
+			"mcr.microsoft.com/mssql/server:2022-CU14-ubuntu-22.04")
+		.acceptLicense()
 		.withNetwork(network)
-		.withNetworkAliases("sqledge")
-		.withEnv("ACCEPT_EULA", "Y")
-		.withEnv("MSSQL_SA_PASSWORD", "yourStrong(!)Password")
-		.withCreateContainerCmdModifier(cmd -> cmd.getHostConfig().withCapAdd(Capability.SYS_PTRACE));
+		.withNetworkAliases("sqlserver");
 
 	@Container
 	private static final GenericContainer<?> serviceBus = new GenericContainer<>(
@@ -54,10 +50,10 @@ class SpringCloudAzureServiceBusApplicationTests {
 		.withExposedPorts(AZURE_SERVICEBUS_PORT)
 		.waitingFor(Wait.forLogMessage(".*Emulator Service is Successfully Up!.*", 1))
 		.withNetwork(network)
-		.withEnv("SQL_SERVER", "sqledge")
-		.withEnv("MSSQL_SA_PASSWORD", "yourStrong(!)Password")
+		.withEnv("SQL_SERVER", "sqlserver")
+		.withEnv("MSSQL_SA_PASSWORD", sqlserver.getPassword())
 		.withEnv("ACCEPT_EULA", "Y")
-		.dependsOn(azureSqlEdge);
+		.dependsOn(sqlserver);
 
 	@DynamicPropertySource
 	static void properties(DynamicPropertyRegistry registry) {
