@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
-import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.azure.AzuriteContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -15,13 +15,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Testcontainers
 class SpringCloudAzureStorageQueueApplicationTests {
 
-	private static final int AZURE_STORAGE_QUEUE_PORT = 10001;
-
 	@Container
 	@ServiceConnection
-	private static final GenericContainer<?> azurite = new GenericContainer<>(
-			"mcr.microsoft.com/azure-storage/azurite:latest")
-		.withExposedPorts(10000, AZURE_STORAGE_QUEUE_PORT);
+	private static final AzuriteContainer azurite = new AzuriteContainer(
+			"mcr.microsoft.com/azure-storage/azurite:latest");
 
 	@Autowired
 	private QueueClient queueClient;

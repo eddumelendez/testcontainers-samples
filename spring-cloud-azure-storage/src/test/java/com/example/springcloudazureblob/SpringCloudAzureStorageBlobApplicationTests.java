@@ -7,7 +7,7 @@ import org.springframework.boot.testcontainers.service.connection.ServiceConnect
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.WritableResource;
 import org.springframework.util.StreamUtils;
-import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.azure.AzuriteContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -21,13 +21,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Testcontainers
 class SpringCloudAzureStorageBlobApplicationTests {
 
-	private static final int AZURE_STORAGE_BLOB_PORT = 10000;
-
 	@Container
 	@ServiceConnection
-	private static final GenericContainer<?> azurite = new GenericContainer<>(
-			"mcr.microsoft.com/azure-storage/azurite:latest")
-		.withExposedPorts(AZURE_STORAGE_BLOB_PORT, 10001);
+	private static final AzuriteContainer azurite = new AzuriteContainer(
+			"mcr.microsoft.com/azure-storage/azurite:latest");
 
 	@Value("azure-blob://testcontainers/message.txt")
 	private Resource blobFile;
