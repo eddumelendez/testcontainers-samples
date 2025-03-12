@@ -53,6 +53,7 @@ class SpringCloudAzureServiceBusApplicationTests {
 		.withEnv("SQL_SERVER", "sqlserver")
 		.withEnv("MSSQL_SA_PASSWORD", sqlserver.getPassword())
 		.withEnv("ACCEPT_EULA", "Y")
+		.withEnv("SQL_WAIT_INTERVAL", "0")
 		.dependsOn(sqlserver);
 
 	@DynamicPropertySource
