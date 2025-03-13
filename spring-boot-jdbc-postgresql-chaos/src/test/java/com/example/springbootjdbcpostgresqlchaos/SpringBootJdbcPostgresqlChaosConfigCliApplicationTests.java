@@ -44,7 +44,7 @@ class SpringBootJdbcPostgresqlChaosConfigCliApplicationTests {
 		.withNetworkAliases("postgres");
 
 	@Container
-	private static final ToxiproxyContainer toxiproxy = new ToxiproxyContainer("ghcr.io/shopify/toxiproxy:2.9.0")
+	private static final ToxiproxyContainer toxiproxy = new ToxiproxyContainer("ghcr.io/shopify/toxiproxy:2.11.0")
 		.withCopyFileToContainer(MountableFile.forClasspathResource("toxiproxy.json"), "/tmp/toxiproxy.json")
 		.withCommand("-host=0.0.0.0", "-config=/tmp/toxiproxy.json")
 		.withNetwork(network);
