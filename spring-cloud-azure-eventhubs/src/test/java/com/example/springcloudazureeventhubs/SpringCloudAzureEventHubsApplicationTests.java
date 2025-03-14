@@ -12,9 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.azure.AzuriteContainer;
+import org.testcontainers.azure.EventHubsEmulatorContainer;
 import org.testcontainers.containers.Network;
-import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.MountableFile;
@@ -34,32 +34,18 @@ class SpringCloudAzureEventHubsApplicationTests {
 
 	private static final Network network = Network.newNetwork();
 
-	private static final int AZURE_STORAGE_BLOB_PORT = 10000;
-
-	private static final int AZURE_STORAGE_QUEUE_PORT = 10001;
-
-	private static final int AZURE_STORAGE_TABLE_PORT = 10002;
-
-	private static final int AZURE_EVENTHUBS_PORT = 5672;
-
 	@Container
-	private static final GenericContainer<?> azurite = new GenericContainer<>(
+	private static final AzuriteContainer azurite = new AzuriteContainer(
 			"mcr.microsoft.com/azure-storage/azurite:latest")
-		.withExposedPorts(AZURE_STORAGE_BLOB_PORT, AZURE_STORAGE_QUEUE_PORT, AZURE_STORAGE_TABLE_PORT)
-		.withNetwork(network)
-		.withNetworkAliases("azurite");
+		.withNetwork(network);
 
 	@Container
-	private static final GenericContainer<?> eventHubs = new GenericContainer<>(
+	private static final EventHubsEmulatorContainer eventHubs = new EventHubsEmulatorContainer(
 			"mcr.microsoft.com/azure-messaging/eventhubs-emulator:latest")
-		.withExposedPorts(AZURE_EVENTHUBS_PORT)
-		.withCopyFileToContainer(MountableFile.forClasspathResource("Config.json"),
-				"/Eventhubs_Emulator/ConfigFiles/Config.json")
-		.waitingFor(Wait.forLogMessage(".*Emulator Service is Successfully Up!.*", 1))
+		.withConfig(MountableFile.forClasspathResource("Config.json"))
 		.withNetwork(network)
-		.withEnv("BLOB_SERVER", "azurite")
-		.withEnv("METADATA_SERVER", "azurite")
-		.withEnv("ACCEPT_EULA", "Y");
+		.acceptLicense()
+		.withAzuriteContainer(azurite);
 
 	@Autowired
 	private EventHubProducerClient producerClient;
@@ -69,11 +55,7 @@ class SpringCloudAzureEventHubsApplicationTests {
 
 	@DynamicPropertySource
 	static void properties(DynamicPropertyRegistry registry) {
-		var eventHubsHost = eventHubs.getHost();
-		var eventHubsMappedPort = eventHubs.getMappedPort(AZURE_EVENTHUBS_PORT);
-		var connectionString = "Endpoint=sb://%s:%d;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=SAS_KEY_VALUE;UseDevelopmentEmulator=true;"
-			.formatted(eventHubsHost, eventHubsMappedPort);
-		registry.add("spring.cloud.azure.eventhubs.connection-string", () -> connectionString);
+		registry.add("spring.cloud.azure.eventhubs.connection-string", eventHubs::getConnectionString);
 	}
 
 	@Test
