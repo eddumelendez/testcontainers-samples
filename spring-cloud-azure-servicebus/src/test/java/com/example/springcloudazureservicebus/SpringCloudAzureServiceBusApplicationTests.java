@@ -12,10 +12,9 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.azure.ServiceBusEmulatorContainer;
 import org.testcontainers.containers.MSSQLServerContainer;
 import org.testcontainers.containers.Network;
-import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.MountableFile;
@@ -34,8 +33,6 @@ class SpringCloudAzureServiceBusApplicationTests {
 
 	private static final Network network = Network.newNetwork();
 
-	private static final int AZURE_SERVICEBUS_PORT = 5672;
-
 	private static MSSQLServerContainer<?> sqlserver = new MSSQLServerContainer<>(
 			"mcr.microsoft.com/mssql/server:2022-CU14-ubuntu-22.04")
 		.acceptLicense()
@@ -43,26 +40,17 @@ class SpringCloudAzureServiceBusApplicationTests {
 		.withNetworkAliases("sqlserver");
 
 	@Container
-	private static final GenericContainer<?> serviceBus = new GenericContainer<>(
+	private static final ServiceBusEmulatorContainer serviceBus = new ServiceBusEmulatorContainer(
 			"mcr.microsoft.com/azure-messaging/servicebus-emulator:latest")
-		.withCopyFileToContainer(MountableFile.forClasspathResource("Config.json"),
-				"/ServiceBus_Emulator/ConfigFiles/Config.json")
-		.withExposedPorts(AZURE_SERVICEBUS_PORT)
-		.waitingFor(Wait.forLogMessage(".*Emulator Service is Successfully Up!.*", 1))
+		.withConfig(MountableFile.forClasspathResource("Config.json"))
 		.withNetwork(network)
-		.withEnv("SQL_SERVER", "sqlserver")
-		.withEnv("MSSQL_SA_PASSWORD", sqlserver.getPassword())
-		.withEnv("ACCEPT_EULA", "Y")
+		.acceptLicense()
 		.withEnv("SQL_WAIT_INTERVAL", "0")
-		.dependsOn(sqlserver);
+		.withMsSqlServerContainer(sqlserver);
 
 	@DynamicPropertySource
 	static void properties(DynamicPropertyRegistry registry) {
-		var serviceBusHost = serviceBus.getHost();
-		var serviceBusPort = serviceBus.getMappedPort(AZURE_SERVICEBUS_PORT);
-		var connectionString = "Endpoint=sb://%s:%d;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=SAS_KEY_VALUE;UseDevelopmentEmulator=true;"
-			.formatted(serviceBusHost, serviceBusPort);
-		registry.add("spring.cloud.azure.servicebus.connection-string", () -> connectionString);
+		registry.add("spring.cloud.azure.servicebus.connection-string", serviceBus::getConnectionString);
 	}
 
 	@Autowired
