@@ -7,7 +7,7 @@ import org.testcontainers.containers.ToxiproxyContainer;
 public class ToxicPostgresContainer extends ToxiproxyContainer {
 
 	public ToxicPostgresContainer() {
-		super("ghcr.io/shopify/toxiproxy:2.11.0");
+		super("ghcr.io/shopify/toxiproxy:2.12.0");
 
 		Network network = Network.newNetwork();
 

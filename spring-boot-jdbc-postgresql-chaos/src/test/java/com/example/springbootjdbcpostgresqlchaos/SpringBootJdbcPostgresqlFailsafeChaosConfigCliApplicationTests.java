@@ -22,9 +22,12 @@ import org.testcontainers.utility.MountableFile;
 import java.time.Duration;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Testcontainers
-@DataJdbcTest
+@DataJdbcTest(properties = { "spring.datasource.hikari.connection-timeout=250",
+		"spring.datasource.hikari.validation-timeout=250", "spring.datasource.hikari.maximum-pool-size=1",
+		"spring.datasource.hikari.login-timeout=1" })
 class SpringBootJdbcPostgresqlFailsafeChaosConfigCliApplicationTests {
 
 	private static final Logger logger = LoggerFactory
@@ -38,7 +41,7 @@ class SpringBootJdbcPostgresqlFailsafeChaosConfigCliApplicationTests {
 		.withNetworkAliases("postgres");
 
 	@Container
-	private static final ToxiproxyContainer toxiproxy = new ToxiproxyContainer("ghcr.io/shopify/toxiproxy:2.11.0")
+	private static final ToxiproxyContainer toxiproxy = new ToxiproxyContainer("ghcr.io/shopify/toxiproxy:2.12.0")
 		.withCopyFileToContainer(MountableFile.forClasspathResource("toxiproxy.json"), "/tmp/toxiproxy.json")
 		.withCommand("-host=0.0.0.0", "-config=/tmp/toxiproxy.json")
 		.withNetwork(network);
@@ -75,14 +78,13 @@ class SpringBootJdbcPostgresqlFailsafeChaosConfigCliApplicationTests {
 	void withLatencyWithTimeout() throws Exception {
 		execute("./toxiproxy-cli toxic add -t latency --downstream -a latency=1600 -a jitter=100 -n latency_downstream postgresql");
 
-		Timeout<Object> timeout = Timeout.builder(Duration.ofMillis(50)).withInterrupt().build();
+		Timeout<Object> timeout = Timeout.builder(Duration.ofMillis(50))
+			.onFailure(e -> logger.info("Attempt #{}", e.getAttemptCount()))
+			.withInterrupt()
+			.build();
 
-		try {
-			Failsafe.with(timeout).run(this.profileRepository::findAll);
-		}
-		catch (Exception e) {
-			assertThat(e).isInstanceOf(TimeoutExceededException.class);
-		}
+		assertThatThrownBy(() -> Failsafe.with(timeout).get(this.profileRepository::findAll))
+			.isInstanceOf(TimeoutExceededException.class);
 
 		execute("./toxiproxy-cli toxic remove -n latency_downstream postgresql");
 	}
@@ -100,12 +102,8 @@ class SpringBootJdbcPostgresqlFailsafeChaosConfigCliApplicationTests {
 
 		execute("./toxiproxy-cli toxic add -t latency --downstream -a latency=1600 -a jitter=100 -n latency_downstream postgresql");
 
-		try {
-			Failsafe.with(retryPolicy).compose(timeout).run(this.profileRepository::findAll);
-		}
-		catch (Exception e) {
-			assertThat(e).isInstanceOf(TimeoutExceededException.class);
-		}
+		assertThatThrownBy(() -> Failsafe.with(retryPolicy).compose(timeout).get(this.profileRepository::findAll))
+			.isInstanceOf(TimeoutExceededException.class);
 
 		execute("./toxiproxy-cli toxic remove -n latency_downstream postgresql");
 
@@ -114,7 +112,7 @@ class SpringBootJdbcPostgresqlFailsafeChaosConfigCliApplicationTests {
 
 	@Test
 	void withToxiProxyConnectionDown() throws Exception {
-		Timeout<Object> timeout = Timeout.builder(Duration.ofMillis(50))
+		Timeout<Object> timeout = Timeout.builder(Duration.ofMillis(500))
 			.withInterrupt()
 			.onFailure(e -> logger.info("Timeout produced"))
 			.build();
@@ -122,12 +120,8 @@ class SpringBootJdbcPostgresqlFailsafeChaosConfigCliApplicationTests {
 		execute("./toxiproxy-cli toxic add -t bandwidth --downstream -a rate=0 -n bandwidth_downstream postgresql");
 		execute("./toxiproxy-cli toxic add -t bandwidth --upstream -a rate=0 -n bandwidth_upstream postgresql");
 
-		try {
-			Failsafe.with(timeout).runAsync(this.profileRepository::findAll);
-		}
-		catch (Exception e) {
-			assertThat(e).isInstanceOf(TimeoutExceededException.class);
-		}
+		assertThatThrownBy(() -> Failsafe.with(timeout).get(this.profileRepository::findAll))
+			.isInstanceOf(TimeoutExceededException.class);
 
 		execute("./toxiproxy-cli toxic remove -n bandwidth_downstream postgresql");
 		execute("./toxiproxy-cli toxic remove -n bandwidth_upstream postgresql");

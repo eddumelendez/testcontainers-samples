@@ -36,7 +36,7 @@ class SpringBootR2dbcPostgresqlChaosCliApplicationTests {
 		.withNetworkAliases("postgres");
 
 	@Container
-	private static final ToxiproxyContainer toxiproxy = new ToxiproxyContainer("ghcr.io/shopify/toxiproxy:2.11.0")
+	private static final ToxiproxyContainer toxiproxy = new ToxiproxyContainer("ghcr.io/shopify/toxiproxy:2.12.0")
 		.withNetwork(network);
 
 	@DynamicPropertySource
