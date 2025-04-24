@@ -15,7 +15,7 @@
     <description>spring-boot-postgresql-synthesized</description>
     <properties>
         <java.version>21</java.version>
-        <testcontainers.version>1.20.6</testcontainers.version>
+        <testcontainers.version>1.21.0</testcontainers.version>
     </properties>
     <dependencies>
         <dependency>

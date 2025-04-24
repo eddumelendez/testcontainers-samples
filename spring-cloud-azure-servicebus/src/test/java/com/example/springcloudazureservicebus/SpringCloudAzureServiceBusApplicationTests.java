@@ -45,7 +45,6 @@ class SpringCloudAzureServiceBusApplicationTests {
 		.withConfig(MountableFile.forClasspathResource("Config.json"))
 		.withNetwork(network)
 		.acceptLicense()
-		.withEnv("SQL_WAIT_INTERVAL", "0")
 		.withMsSqlServerContainer(sqlserver);
 
 	@DynamicPropertySource
