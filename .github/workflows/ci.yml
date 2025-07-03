@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   find_jobs:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
@@ -34,7 +34,7 @@ jobs:
   build:
     name: "${{ matrix.modules }}"
     needs: [find_jobs]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.find_jobs.outputs.matrix) }}
