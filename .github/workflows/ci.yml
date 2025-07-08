@@ -49,5 +49,6 @@ jobs:
           java-version: '21'
           distribution: temurin
           cache: maven
+          cache-dependency-path: ${{ matrix.modules }}/pom.xml
       - name: Build with Maven (${{ matrix.modules }})
         run: ./mvnw -V -B verify -pl ${{ matrix.modules }}
