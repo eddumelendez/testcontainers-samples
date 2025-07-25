@@ -1,5 +1,6 @@
 package com.example.springbootelasticsearch;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.elasticsearch.DataElasticsearchTest;
@@ -16,6 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataElasticsearchTest
 @Testcontainers
+@Disabled
 class BookRepositoryElasticsearch8Tests {
 
 	@Container

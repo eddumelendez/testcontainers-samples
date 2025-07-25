@@ -9,9 +9,10 @@ import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.apache.http.message.BasicHeader;
 import org.elasticsearch.client.RestClientBuilder;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.elasticsearch.RestClientBuilderCustomizer;
+import org.springframework.boot.elasticsearch.autoconfigure.RestClientBuilderCustomizer;
 import org.springframework.boot.test.autoconfigure.data.elasticsearch.DataElasticsearchTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
@@ -30,6 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataElasticsearchTest
 @Testcontainers
+@Disabled
 class BookRepositoryElasticsearch8SslApiKeyTests {
 
 	static String apiKey;

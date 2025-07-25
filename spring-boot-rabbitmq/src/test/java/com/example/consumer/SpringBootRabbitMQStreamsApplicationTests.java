@@ -5,7 +5,7 @@ import com.rabbitmq.stream.Environment;
 import org.junit.jupiter.api.Test;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.amqp.EnvironmentBuilderCustomizer;
+import org.springframework.boot.amqp.autoconfigure.EnvironmentBuilderCustomizer;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
