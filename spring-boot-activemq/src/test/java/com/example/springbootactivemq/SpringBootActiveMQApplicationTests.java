@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jms.annotation.JmsListener;
-import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.JmsClient;
 import org.testcontainers.activemq.ActiveMQContainer;
 
 import java.time.Duration;
@@ -21,14 +21,14 @@ import static org.awaitility.Awaitility.waitAtMost;
 class SpringBootActiveMQApplicationTests {
 
 	@Autowired
-	private JmsTemplate jmsTemplate;
+	private JmsClient jmsClient;
 
 	@Autowired
 	private TestListener testListener;
 
 	@Test
 	void consumeMessage() {
-		this.jmsTemplate.convertAndSend("test", "test-data");
+		this.jmsClient.destination("test").send("test-data");
 
 		waitAtMost(Duration.ofSeconds(30)).untilAsserted(() -> {
 			assertThat(this.testListener.messages).hasSize(1);
