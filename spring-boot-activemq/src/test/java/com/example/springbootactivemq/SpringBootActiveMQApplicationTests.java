@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsClient;
 import org.testcontainers.activemq.ActiveMQContainer;
+import org.testcontainers.junit.jupiter.Container;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -19,6 +20,10 @@ import static org.awaitility.Awaitility.waitAtMost;
 
 @SpringBootTest
 class SpringBootActiveMQApplicationTests {
+
+	@Container
+	@ServiceConnection
+	static final ActiveMQContainer activeMQ = new ActiveMQContainer("apache/activemq-classic:5.18.3");
 
 	@Autowired
 	private JmsClient jmsClient;
@@ -52,17 +57,6 @@ class SpringBootActiveMQApplicationTests {
 		@JmsListener(destination = "test")
 		void listen(String data) {
 			this.messages.add(data);
-		}
-
-	}
-
-	@TestConfiguration
-	static class TestcontainersConfiguration {
-
-		@Bean
-		@ServiceConnection
-		ActiveMQContainer activemq() {
-			return new ActiveMQContainer("apache/activemq-classic:5.18.3");
 		}
 
 	}

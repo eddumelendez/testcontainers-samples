@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.pulsar.annotation.PulsarListener;
 import org.springframework.pulsar.core.PulsarTemplate;
 import org.testcontainers.containers.PulsarContainer;
+import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.utility.DockerImageName;
 
 import java.time.Duration;
@@ -20,6 +21,10 @@ import static org.awaitility.Awaitility.waitAtMost;
 
 @SpringBootTest
 class SpringBootPulsarApplicationTests {
+
+	@Container
+	@ServiceConnection
+	static final PulsarContainer pulsar = new PulsarContainer(DockerImageName.parse("apachepulsar/pulsar:3.1.0"));
 
 	@Autowired
 	private PulsarTemplate<String> pulsarTemplate;
@@ -53,17 +58,6 @@ class SpringBootPulsarApplicationTests {
 		@PulsarListener(topics = "test")
 		void listen(String data) {
 			this.messages.add(data);
-		}
-
-	}
-
-	@TestConfiguration
-	static class TestcontainersConfiguration {
-
-		@Bean
-		@ServiceConnection
-		PulsarContainer pulsar() {
-			return new PulsarContainer(DockerImageName.parse("apachepulsar/pulsar:3.1.0"));
 		}
 
 	}

@@ -6,20 +6,14 @@ import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.KStream;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.AfterAllCallback;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.extension.ExtensionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.config.StreamsBuilderFactoryBean;
 import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.testcontainers.kafka.KafkaContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -37,7 +31,6 @@ import static org.awaitility.Awaitility.waitAtMost;
 		"spring.kafka.streams.properties.default.key.serde=org.apache.kafka.common.serialization.Serdes$StringSerde",
 		"spring.kafka.streams.properties.default.value.serde=org.apache.kafka.common.serialization.Serdes$StringSerde" })
 @Testcontainers
-@ExtendWith(SpringBootKafkaStreamsApplicationTests.KafkaStreamsAfterAllCallback.class)
 class SpringBootKafkaStreamsApplicationTests {
 
 	private static final String INPUT_TOPIC = "input-topic";
@@ -99,18 +92,6 @@ class SpringBootKafkaStreamsApplicationTests {
 		@KafkaListener(topics = OUTPUT_TOPIC, groupId = "test")
 		void listen(String data) {
 			this.messages.add(data);
-		}
-
-	}
-
-	static class KafkaStreamsAfterAllCallback implements AfterAllCallback {
-
-		@Override
-		public void afterAll(ExtensionContext extensionContext) {
-			ApplicationContext applicationContext = SpringExtension.getApplicationContext(extensionContext);
-			StreamsBuilderFactoryBean streamsBuilderFactoryBean = applicationContext
-				.getBean(StreamsBuilderFactoryBean.class);
-			streamsBuilderFactoryBean.stop();
 		}
 
 	}
