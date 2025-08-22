@@ -1,15 +1,15 @@
 package com.example.springbootelasticsearch;
 
+import co.elastic.clients.transport.rest5_client.low_level.Rest5ClientBuilder;
 import com.github.dockerjava.api.command.InspectContainerResponse;
 import io.restassured.response.Response;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
-import org.apache.http.message.BasicHeader;
-import org.elasticsearch.client.RestClientBuilder;
+import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.impl.async.HttpAsyncClientBuilder;
+import org.apache.hc.core5.http.message.BasicHeader;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.elasticsearch.autoconfigure.RestClientBuilderCustomizer;
+import org.springframework.boot.elasticsearch.autoconfigure.Rest5ClientBuilderCustomizer;
 import org.springframework.boot.test.autoconfigure.data.elasticsearch.DataElasticsearchTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
@@ -74,11 +74,11 @@ class BookRepositoryElasticsearch8ApiKeyTests {
 	static class Config {
 
 		@Bean
-		RestClientBuilderCustomizer elasticsearchRestClientBuilderCustomizer() {
-			return new RestClientBuilderCustomizer() {
+		Rest5ClientBuilderCustomizer elasticsearchRestClientBuilderCustomizer() {
+			return new Rest5ClientBuilderCustomizer() {
 
 				@Override
-				public void customize(RestClientBuilder builder) {
+				public void customize(Rest5ClientBuilder builder) {
 
 				}
 
@@ -89,7 +89,7 @@ class BookRepositoryElasticsearch8ApiKeyTests {
 
 				@Override
 				public void customize(RequestConfig.Builder builder) {
-					RestClientBuilderCustomizer.super.customize(builder);
+					Rest5ClientBuilderCustomizer.super.customize(builder);
 				}
 			};
 		}
