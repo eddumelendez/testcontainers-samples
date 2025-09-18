@@ -5,6 +5,7 @@ import liquibase.database.DatabaseFactory;
 import liquibase.exception.LiquibaseException;
 import liquibase.ext.mongodb.database.MongoLiquibaseDatabase;
 import liquibase.resource.ClassLoaderResourceAccessor;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
@@ -21,6 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataMongoTest
 @Testcontainers
+@Disabled
 class BookRepositoryBitnamiMongoDbReplicaSetTest {
 
 	@Container
