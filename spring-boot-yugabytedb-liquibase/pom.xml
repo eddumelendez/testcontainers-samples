@@ -14,7 +14,7 @@
     <name>spring-boot-yugabytedb-liquibase</name>
     <description>spring-boot-yugabytedb-liquibase</description>
     <properties>
-        <java.version>21</java.version>
+        <java.version>25</java.version>
         <testcontainers.version>1.21.3</testcontainers.version>
     </properties>
     <dependencies>
