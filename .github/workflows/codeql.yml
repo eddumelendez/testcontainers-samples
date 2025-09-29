@@ -21,7 +21,7 @@ jobs:
 
       # Initializes the CodeQL tools for scanning.
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
+        uses: github/codeql-action/init@v3
         with:
           languages: 'java'
           # If you wish to specify custom queries, you can do so here or in a config file.
@@ -41,6 +41,6 @@ jobs:
         run: ./mvnw -V -B package -DskipTests
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v2
+        uses: github/codeql-action/analyze@v3
         with:
           category: "/language:java"
