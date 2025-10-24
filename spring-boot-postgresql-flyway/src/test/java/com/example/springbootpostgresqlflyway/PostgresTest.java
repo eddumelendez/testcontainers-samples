@@ -2,10 +2,10 @@ package com.example.springbootpostgresqlflyway;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.boot.jdbc.test.autoconfigure.JdbcTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.postgresql.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -17,7 +17,7 @@ class PostgresTest {
 
 	@Container
 	@ServiceConnection
-	private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15-alpine");
+	private static final PostgreSQLContainer postgres = new PostgreSQLContainer("postgres:15-alpine");
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;

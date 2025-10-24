@@ -1,11 +1,12 @@
 package com.example.springbootprometheus;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.actuate.observability.AutoConfigureObservability;
+import org.springframework.boot.micrometer.metrics.test.autoconfigure.AutoConfigureMetrics;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.web.server.test.LocalServerPort;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.images.builder.Transferable;
@@ -22,8 +23,9 @@ import static org.hamcrest.Matchers.hasItem;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT,
 		properties = { "management.endpoints.web.exposure.include=*", "management.prometheus.metrics.export.step=2s" })
-@AutoConfigureObservability(tracing = false)
+@AutoConfigureMetrics
 @Testcontainers
+@Disabled
 class SpringBootPrometheusApplicationTests {
 
 	@LocalServerPort

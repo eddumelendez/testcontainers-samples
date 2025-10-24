@@ -1,8 +1,8 @@
 package com.example.springbootr2dbcpostgresqlchaos;
 
 import org.testcontainers.containers.Network;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.containers.ToxiproxyContainer;
+import org.testcontainers.postgresql.PostgreSQLContainer;
+import org.testcontainers.toxiproxy.ToxiproxyContainer;
 
 public class ToxicPostgresContainer extends ToxiproxyContainer {
 
@@ -11,7 +11,7 @@ public class ToxicPostgresContainer extends ToxiproxyContainer {
 
 		Network network = Network.newNetwork();
 
-		PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15-alpine").withNetwork(network)
+		PostgreSQLContainer postgres = new PostgreSQLContainer("postgres:15-alpine").withNetwork(network)
 			.withNetworkAliases("postgres");
 		withNetwork(network);
 		dependsOn(postgres);

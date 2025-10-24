@@ -3,14 +3,14 @@ package com.example.springbootpostgresqlflyway;
 import io.synthesized.tdktc.SynthesizedTDK;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.jdbc.test.autoconfigure.JdbcTest;
 import org.springframework.boot.sql.init.dependency.DependsOnDatabaseInitialization;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.Network;
-import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.postgresql.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -23,11 +23,11 @@ class PostgresTest {
 	private static Network network = Network.newNetwork();
 
 	@Container
-	private static final PostgreSQLContainer<?> postgresIn = new PostgreSQLContainer<>("postgres:15-alpine")
+	private static final PostgreSQLContainer postgresIn = new PostgreSQLContainer("postgres:15-alpine")
 		.withNetwork(network);
 
 	@Container
-	private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15-alpine")
+	private static final PostgreSQLContainer postgres = new PostgreSQLContainer("postgres:15-alpine")
 		.withNetwork(network);
 
 	private static final String synthesizedConfig = """

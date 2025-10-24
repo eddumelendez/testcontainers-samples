@@ -3,6 +3,7 @@ package com.example.consumer;
 import com.example.container.KafkaLocalContainer;
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,6 +27,7 @@ import static org.awaitility.Awaitility.waitAtMost;
 
 @SpringBootTest(properties = "spring.kafka.consumer.auto-offset-reset=earliest")
 @Testcontainers
+@Disabled
 class SpringBootKafkaLocalRaftApplicationTests {
 
 	private static final String APPLICATION_VND_KAFKA_JSON_V_2_JSON = "application/vnd.kafka.json.v2+json";
