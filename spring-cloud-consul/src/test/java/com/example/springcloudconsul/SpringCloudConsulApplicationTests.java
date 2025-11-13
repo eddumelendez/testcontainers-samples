@@ -2,23 +2,23 @@ package com.example.springcloudconsul;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.web.server.test.LocalServerPort;
+import org.springframework.test.web.servlet.client.RestTestClient;
 import org.testcontainers.consul.ConsulContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.containsString;
-
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT,
 		properties = { "spring.config.import=consul:", "spring.cloud.consul.config.name=tc" })
 @Testcontainers
+@AutoConfigureRestTestClient
 class SpringCloudConsulApplicationTests {
 
-	@LocalServerPort
-	private int port;
+	@Autowired
+	private RestTestClient restTestClient;
 
 	@Container
 	private static ConsulContainer consul = new ConsulContainer("hashicorp/consul:1.13.2")
@@ -35,7 +35,7 @@ class SpringCloudConsulApplicationTests {
 
 	@Test
 	void contextLoads() {
-		given().port(this.port).get("/hello").then().assertThat().body(containsString("Hello"));
+		this.restTestClient.get().uri("/hello").exchange().expectBody(String.class).isEqualTo("Hello");
 	}
 
 }
