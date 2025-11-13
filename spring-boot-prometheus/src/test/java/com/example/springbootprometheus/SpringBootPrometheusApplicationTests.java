@@ -1,12 +1,16 @@
 package com.example.springbootprometheus;
 
+import net.minidev.json.JSONArray;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.micrometer.metrics.test.autoconfigure.AutoConfigureMetrics;
+import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.test.web.servlet.client.RestTestClient;
+import org.springframework.web.util.UriComponentsBuilder;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.images.builder.Transferable;
@@ -15,21 +19,21 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import org.awaitility.Awaitility;
 
 import java.time.Duration;
-import java.util.Map;
 
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasItem;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT,
 		properties = { "management.endpoints.web.exposure.include=*", "management.prometheus.metrics.export.step=2s" })
 @AutoConfigureMetrics
+@AutoConfigureRestTestClient
 @Testcontainers
-@Disabled
 class SpringBootPrometheusApplicationTests {
 
 	@LocalServerPort
 	private int localPort;
+
+	@Autowired
+	private RestTestClient restTestClient;
 
 	@Container
 	static final GenericContainer<?> prometheus = new GenericContainer<>("prom/prometheus:v2.37.0")
@@ -57,20 +61,25 @@ class SpringBootPrometheusApplicationTests {
 
 	@Test
 	void contextLoads() {
-		given().port(this.localPort).get("/greetings").then().assertThat().body(equalTo("Hello World"));
+		var restTestClient = RestTestClient.bindToServer()
+			.baseUrl("http://%s:%d".formatted(prometheus.getHost(), prometheus.getMappedPort(9090)))
+			.build();
+
+		this.restTestClient.get().uri("/greetings").exchange().expectBody(String.class).isEqualTo("Hello World");
+
 		Awaitility.given()
 			.pollInterval(Duration.ofSeconds(2))
 			.atMost(Duration.ofSeconds(15))
 			.ignoreExceptions()
-			.untilAsserted(() -> given().baseUri("http://" + prometheus.getHost())
-				.port(prometheus.getMappedPort(9090))
-				.queryParams(Map.of("query", "http_server_requests_seconds_count{uri=\"/greetings\"}"))
-				.get("/api/v1/query")
-				.prettyPeek()
-				.then()
-				.assertThat()
-				.statusCode(200)
-				.body("data.result[0].value", hasItem("1")));
+			.untilAsserted(() -> restTestClient.get()
+				.uri(UriComponentsBuilder.fromPath("/api/v1/query")
+					.queryParam("query", "http_server_requests_seconds_count{uri=\"/greetings\"}")
+					.build()
+					.toUri())
+				.exchange()
+				.expectBody()
+				.jsonPath("data.result[0].value")
+				.value(JSONArray.class, value -> assertThat(value).contains("1")));
 	}
 
 }
