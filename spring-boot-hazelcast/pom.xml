@@ -15,7 +15,7 @@
     <description>spring-boot-hazelcast</description>
     <properties>
         <java.version>25</java.version>
-        <testcontainers.version>2.0.2</testcontainers.version>
+        <testcontainers.version>2.0.3</testcontainers.version>
     </properties>
     <dependencies>
         <dependency>
