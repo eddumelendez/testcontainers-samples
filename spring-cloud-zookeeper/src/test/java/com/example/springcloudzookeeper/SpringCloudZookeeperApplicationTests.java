@@ -20,7 +20,7 @@ class SpringCloudZookeeperApplicationTests {
 	private static final int ZOOKEEPER_PORT = 2181;
 
 	@Container
-	private static final GenericContainer<?> zookeeper = new GenericContainer<>("zookeeper:3.8.0")
+	private static final GenericContainer<?> zookeeper = new GenericContainer<>("zookeeper:3.9.4")
 		.withExposedPorts(ZOOKEEPER_PORT);
 
 	@Autowired
