@@ -1,6 +1,5 @@
 package com.example.springbootelasticsearch;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.elasticsearch.test.autoconfigure.DataElasticsearchTest;
@@ -17,14 +16,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataElasticsearchTest
 @Testcontainers
-@Disabled
 class BookRepositoryElasticsearch8Tests {
 
 	@Container
 	@ServiceConnection
 	@Ssl
 	private static ElasticsearchContainer elasticsearch = new ElasticsearchContainer(
-			"docker.elastic.co/elasticsearch/elasticsearch:8.7.1");
+			"docker.elastic.co/elasticsearch/elasticsearch:9.2.3");
 
 	@Autowired
 	private BookRepository bookRepository;

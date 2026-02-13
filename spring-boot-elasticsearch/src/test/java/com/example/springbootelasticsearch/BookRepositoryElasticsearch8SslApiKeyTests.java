@@ -9,7 +9,6 @@ import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.impl.async.HttpAsyncClientBuilder;
 import org.apache.hc.core5.http.message.BasicHeader;
 import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.elasticsearch.test.autoconfigure.DataElasticsearchTest;
@@ -31,7 +30,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataElasticsearchTest
 @Testcontainers
-@Disabled
 class BookRepositoryElasticsearch8SslApiKeyTests {
 
 	static String apiKey;
@@ -40,7 +38,7 @@ class BookRepositoryElasticsearch8SslApiKeyTests {
 	@ServiceConnection
 	@Ssl
 	private static ElasticsearchContainer elasticsearch = new ElasticsearchContainer(
-			"docker.elastic.co/elasticsearch/elasticsearch:8.7.1") {
+			"docker.elastic.co/elasticsearch/elasticsearch:9.2.3") {
 		@Override
 		protected void containerIsStarted(InspectContainerResponse containerInfo) {
 			Response response = given().baseUri("https://" + elasticsearch.getHttpHostAddress())
