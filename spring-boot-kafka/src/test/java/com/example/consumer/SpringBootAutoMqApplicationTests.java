@@ -12,7 +12,7 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.Network;
-import org.testcontainers.containers.localstack.LocalStackContainer;
+import org.testcontainers.localstack.LocalStackContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.images.builder.Transferable;
 import org.testcontainers.junit.jupiter.Container;
@@ -33,8 +33,7 @@ public class SpringBootAutoMqApplicationTests {
 
 	static Network network = Network.newNetwork();
 
-	static LocalStackContainer localstack = new LocalStackContainer(
-			DockerImageName.parse("localstack/localstack:4.0.3")) {
+	static LocalStackContainer localstack = new LocalStackContainer("localstack/localstack:4.13.1") {
 		@Override
 		protected void containerIsStarted(InspectContainerResponse containerInfo) {
 			try {
