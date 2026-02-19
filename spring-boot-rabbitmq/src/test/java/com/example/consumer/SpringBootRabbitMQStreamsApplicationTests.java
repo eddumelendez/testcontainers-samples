@@ -11,8 +11,6 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.rabbit.stream.producer.RabbitStreamTemplate;
 import org.springframework.rabbit.stream.support.StreamAdmin;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.rabbitmq.RabbitMQContainer;
 import org.testcontainers.images.builder.Transferable;
 import org.testcontainers.junit.jupiter.Container;
@@ -39,12 +37,6 @@ class SpringBootRabbitMQStreamsApplicationTests {
 
 	@Autowired
 	private TestListener testListener;
-
-	@DynamicPropertySource
-	static void properties(DynamicPropertyRegistry registry) {
-		registry.add("spring.rabbitmq.stream.host", rabbitmq::getHost);
-		registry.add("spring.rabbitmq.stream.port", () -> rabbitmq.getMappedPort(RABBITMQ_STREAMS_PORT));
-	}
 
 	@Test
 	void consumeMessage() {
