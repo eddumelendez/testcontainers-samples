@@ -67,15 +67,4 @@ class SpringBootPulsarProtoBufApplicationTests {
 
 	}
 
-	@TestConfiguration
-	static class TestcontainersConfiguration {
-
-		@Bean
-		@ServiceConnection
-		PulsarContainer pulsar() {
-			return new PulsarContainer(DockerImageName.parse("apachepulsar/pulsar:3.1.0"));
-		}
-
-	}
-
 }
