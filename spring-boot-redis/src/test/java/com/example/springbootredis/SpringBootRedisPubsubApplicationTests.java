@@ -6,11 +6,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.redis.connection.Message;
-import org.springframework.data.redis.connection.MessageListener;
+import org.springframework.data.redis.annotation.EnableRedisListeners;
+import org.springframework.data.redis.annotation.RedisListener;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -47,14 +46,13 @@ class SpringBootRedisPubsubApplicationTests {
 	}
 
 	@TestConfiguration
+	@EnableRedisListeners
 	static class Config {
 
 		@Bean
-		RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory connectionFactory,
-				MessageListener messageListener) {
+		RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory connectionFactory) {
 			RedisMessageListenerContainer container = new RedisMessageListenerContainer();
 			container.setConnectionFactory(connectionFactory);
-			container.addMessageListener(messageListener, new ChannelTopic("test"));
 			return container;
 		}
 
@@ -65,13 +63,13 @@ class SpringBootRedisPubsubApplicationTests {
 
 	}
 
-	static class TestListener implements MessageListener {
+	static class TestListener {
 
 		private final List<String> messages = new ArrayList<>();
 
-		@Override
-		public void onMessage(Message message, byte[] pattern) {
-			this.messages.add(new String(message.getBody()));
+		@RedisListener("test")
+		public void onMessage(String message) {
+			this.messages.add(message);
 		}
 
 	}
