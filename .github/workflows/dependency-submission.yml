@@ -16,4 +16,4 @@ jobs:
           java-version: 25
           distribution: temurin
       - name: Submit Dependency Snapshot
-        uses: advanced-security/maven-dependency-submission-action@v4.0.2
+        uses: advanced-security/maven-dependency-submission-action@v5.0.0
