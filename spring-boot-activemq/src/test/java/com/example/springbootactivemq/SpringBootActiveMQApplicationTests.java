@@ -23,7 +23,7 @@ class SpringBootActiveMQApplicationTests {
 
 	@Container
 	@ServiceConnection
-	static final ActiveMQContainer activeMQ = new ActiveMQContainer("apache/activemq-classic:5.18.3");
+	static final ActiveMQContainer activeMQ = new ActiveMQContainer("apache/activemq:6.2.2");
 
 	@Autowired
 	private JmsClient jmsClient;
