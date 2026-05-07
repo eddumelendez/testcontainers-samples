@@ -33,7 +33,7 @@ jobs:
 
       - uses: actions/setup-java@v5
         with:
-          java-version: '25'
+          java-version-file: '.sdkmanrc'
           distribution: temurin
           cache: maven
 
