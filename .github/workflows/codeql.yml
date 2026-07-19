@@ -34,7 +34,6 @@ jobs:
       - uses: actions/setup-java@v5
         with:
           java-version-file: '.sdkmanrc'
-          distribution: temurin
           cache: maven
 
       - name: Build with Maven

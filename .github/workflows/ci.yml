@@ -47,7 +47,6 @@ jobs:
       - uses: actions/setup-java@v5
         with:
           java-version-file: '.sdkmanrc'
-          distribution: temurin
           cache: maven
           cache-dependency-path: ${{ matrix.modules }}/pom.xml
       - name: Build with Maven (${{ matrix.modules }})

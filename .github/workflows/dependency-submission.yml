@@ -14,6 +14,5 @@ jobs:
         uses: actions/setup-java@v5
         with:
           java-version-file: '.sdkmanrc'
-          distribution: temurin
       - name: Submit Dependency Snapshot
         uses: advanced-security/maven-dependency-submission-action@v5.0.0
